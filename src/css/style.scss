@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+$accent: aqua;
+$background: #000011;
+
+body {
+  background-color: $background;
+  color: aqua;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.valid {
+  visibility: hidden;
+}
+
+.invalid {
+  visibility: visible;
+  color: red;
+}
+
+.component {
+  padding: 1em;
+  margin: 1em;
+}
+
+.outline {
+  border: 1px solid $accent;
+}
+
+.component h1 {
+  font-size: 1.5em;
+  margin-bottom: 0.3em;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+}
+
+.login_form_wrapper {
+  display: block;
+  width: 20em;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2em;
+}
+
+.login_form p {
+  width: 100%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  padding: 0.3em;
+  overflow: auto;
+}
+
+.login_form .callsign {
+  text-transform: uppercase;
+}
+
+.login_form label {
+  width: 30%;
+  float: left;
+  text-align: left;
+}
+
+.login_form input,
+.login_form select {
+  width: 60%;
+  float: right;
+}
+
+.component input,
+.component select,
+.component button {
+  color: $accent;
+  background-color: $background;
+  border: 1px solid $accent;
+  font-family: "Roboto Mono", monospace;
+}
+.clookup_form {
+  display:block;
+  overflow:hidden;
+  
+}
+.clookup_form button {
+  margin-left: 1em;
+  width: 30%;
+}
+.lookupResults {
+  margin-top:0.5em
+}
+.lookupResults i, .solar i {
+  font-style: bold;
+  font-weight: 700;
+  width: 3.5em;
+  display: inline-block;
+  text-align: ri;
+}
+
+.tcell {
+  overflow: hidden;
+}
+
+.clookup_form input {
+  width: 60%;
+}
+.component button {
+  background-color: $accent;
+  border: 1px solid $accent;
+  color: $background;
+  text-transform: uppercase;
+  font-family: "Roboto Condensed";
+
+}
+
+.login_form select option {
+  font-family: "Roboto Condensed";
+}
+
+.login_form button,
+.login_form select {
+  font-family: "Roboto Condensed";
+}
+
+.login_form_wrapper h1 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.login_form_wrapper h2 {
+  font-size: 1.2em;
+  margin-bottom: 0.3em;
+}
+
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 95vh;
+}
+
+.nvar {
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid $accent;
+}
+.filler {
+  display: table-cell;
+  width: 100%;
+}
+.stationInfo {
+  display: table-cell;
+  width: 12em;
+  text-align: right;
+  vertical-align: top;
+}
+.logo {
+  font-size: 2em;
+  display: table-cell;
+}
+
+.rightcol {
+  width: calc(30% - 1em);
+  float: right;
+}
