@@ -76,18 +76,38 @@ class HamDash extends React.Component {
       </nav>
 
       <section className="section">
-        <div className="columns">
-          <div className="column">
-            <SmartMap home={this.state.station_info.locator} country_by_name={this.state.country_by_name} ></SmartMap>
+        <div className="tile is-ancestor">
+          <div className="tile is-vertical ">
+            <div className="tile">
+              <div className="tile is-parent">
+                <div className="tile is-child">
+                  <SmartMap className=" " home={this.state.station_info.locator} country_by_name={this.state.country_by_name}> </SmartMap>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="column">
-            <NTPTime></NTPTime>
-            <WWV wwv_data={this.state.wwv_data}></WWV>
-            <CallLookup onCountryChanged={this.countryByNameCallback}></CallLookup></div>
 
+          <div className="tile is-vertical is-4">
+            <div className="tile">
+              <div className="tile is-parent is-vertical">
+                <div className="tile is-child ">
+                  <NTPTime ></NTPTime>
+                </div>
+                <div className="tile is-child ">
+                  <WWV wwv_data={this.state.wwv_data}></WWV>
+                </div>
+                <div className="tile is-child ">
+                  <CallLookup onCountryChanged={this.countryByNameCallback}></CallLookup>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-    </div>;
+
+      </section >
+    </div >;
   }
 
   async refreshComponents() {

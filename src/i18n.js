@@ -31,8 +31,9 @@ const resources = {
       "CLOOKUP.CALLSIGN_PLACEHOLDER":"enter the callsign to lookup", 
       "NTPTIME.LABEL_LOCAL_TIME":"Local",
       "NTPTIME.LABEL_TIME_ERROR":"This device is off by {{offset}}ms",
-      "NTPTIME.TITLE":"UTC TIME"
-      
+      "NTPTIME.TITLE":"UTC TIME",
+      "MAP.MAP_TITLE":"World Map",
+      "MAP.MAP_DISTANCE":"Locator: {{locator}}, Distance: {{distance}}{{km_or_mi}}"
     }
   },
   es: {
@@ -44,6 +45,28 @@ const resources = {
       "LOGIN.WELCOME2": "Ingrese su señal distintiva y su grid locator para personalizar su tablero.",
       "LOGIN.LANGUAGE": "Idioma",
       "LOGIN.BUTTON": "Ingresar",
+
+
+
+      "WWV.LOADING": "Cargando...",
+      "WWV.SFI": "IFS",
+      "WWV.PLANETARY_A_INDEX": "Índice A",
+      "WWV.PLANETARY_K_INDEX": "Índice K",
+      "WWV.UPDATED": "Actualizado",
+      "CLOOKUP.TITLE": "Búsqueda de Indicativos",
+      "CLOOKUP.EXPLAIN": "Este modulo utiliza QRZ.com para realizar búsquedas. Ingrese su usuario y contraseña de QRZ para ver datos. ¿No tiene cuenta? Regístrese en ",
+      "CLOOKUP.USERNAME": "Usuario QRZ.com",
+      "CLOOKUP.PASSWORD": "Contraseñ QRZ.com",
+      "CLOOKUP.CALLSIGN": "Indicativo",
+      "CLOOKUP.LOGIN": "Iniciar Sesión",
+      "CLOOKUP.LOOKUP": "Buscar",
+      "LOGIN.PRIVACYPOLICY":"Cookie policy: This sites uses no cookies. Privacy policy: This is a static website. All of your data is stored in your browser.",
+      "CLOOKUP.CALLSIGN_PLACEHOLDER":"ingrese la señal distintiva", 
+      "NTPTIME.LABEL_LOCAL_TIME":"Local",
+      "NTPTIME.LABEL_TIME_ERROR":"Este dispositivo tiene un error de {{offset}}ms",
+      "NTPTIME.TITLE":"Hora UTC",
+      "MAP.MAP_TITLE":"Mapa",
+      "MAP.MAP_DISTANCE":"Locator: {{locator}}, Distancia: {{distance}}{{km_or_mi}}"
 
     }
   }
