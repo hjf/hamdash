@@ -34,10 +34,11 @@ async function fetch() {
   else
     wwvData = JSON.parse(wwvData)
 
-  if (wwvData.expires === undefined || wwvData.expires < new Date()) {
+  if (wwvData.expires === undefined || new Date(wwvData.expires) < new Date()) {
     wwvData = await fetchData();
     if (wwvData.error === null)
       localStorage.setItem(FETCHER_KEY, JSON.stringify(wwvData))
+  } else {
   }
   return wwvData
 }

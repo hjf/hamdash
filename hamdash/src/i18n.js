@@ -28,10 +28,7 @@ const resources = {
       "CLOOKUP.LOGIN": "Login",
       "CLOOKUP.LOOKUP": "Find",
       "LOGIN.PRIVACYPOLICY":"Cookie policy: This sites uses no cookies. Privacy policy: This is a static website. All of your data is stored in your browser.",
-      "CLOOKUP.CALLSIGN_PLACEHOLDER":"enter the callsign to lookup", 
-      "NTPTIME.LABEL_LOCAL_TIME":"Local",
-      "NTPTIME.LABEL_TIME_ERROR":"This device is off by {{offset}}ms",
-      "NTPTIME.TITLE":"UTC TIME"
+      "CLOOKUP.CALLSIGN_PLACEHOLDER":"enter the callsign to lookup"
       
     }
   },

@@ -1,165 +1,253 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
-$accent: aqua;
-$background: #000011;
-
-body {
-  background-color: $background;
-  color: aqua;
-  font-family: "Roboto Condensed", sans-serif;
+.worldmap {
+  height: 180px;
 }
 
-.valid {
-  visibility: hidden;
-}
 
-.invalid {
-  visibility: visible;
-  color: red;
-}
-
-.component {
-  padding: 1em;
-  margin: 1em;
-}
-
-.outline {
-  border: 1px solid $accent;
-}
-
-.component h1 {
-  font-size: 1.5em;
-  margin-bottom: 0.3em;
-  text-transform: uppercase;
-  letter-spacing: 0.15rem;
-}
-
-.login_form_wrapper {
-  display: block;
-  width: 20em;
-  margin: 0 auto;
-  text-align: center;
-  padding: 2em;
-}
-
-.login_form p {
+.leaflet-container {
   width: 100%;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  text-align: center;
-  padding: 0.3em;
-  overflow: auto;
+  height: 300px;
+  opacity: 0;
+  animation: fadeInLeaflet .5s ease forwards 0s;
 }
 
-.login_form .callsign {
-  text-transform: uppercase;
+@keyframes fadeInLeaflet {
+  to {opacity: 1;}
 }
 
-.login_form label {
-  width: 30%;
-  float: left;
-  text-align: left;
-}
-
-.login_form input,
-.login_form select {
-  width: 60%;
-  float: right;
-}
-
-.component input,
-.component select,
-.component button {
-  color: $accent;
-  background-color: $background;
-  border: 1px solid $accent;
-  font-family: "Roboto Mono", monospace;
-}
-.clookup_form {
-  display:block;
-  overflow:hidden;
-  
-}
-.clookup_form button {
-  margin-left: 1em;
-  width: 30%;
-}
-.lookupResults {
-  margin-top:0.5em
-}
-.lookupResults i, .solar i {
-  font-style: bold;
-  font-weight: 700;
-  width: 3.5em;
-  display: inline-block;
-  text-align: ri;
-}
-
-.tcell {
+.show-map {
   overflow: hidden;
+  position: relative;
+  width: inherit;
+  height: 300px;
+  animation: fadeInShadow .5s ease forwards 0s;
 }
 
-.clookup_form input {
-  width: 60%;
-}
-.component button {
-  background-color: $accent;
-  border: 1px solid $accent;
-  color: $background;
-  text-transform: uppercase;
-  font-family: "Roboto Condensed";
-
+@keyframes fadeInShadow {
+  0% {
+    box-shadow: none;
+  }
+  100% {
+    box-shadow: 0 0 25px 20px rgba(0, 0, 0, .7);
+  }
 }
 
-.login_form select option {
-  font-family: "Roboto Condensed";
-}
-
-.login_form button,
-.login_form select {
-  font-family: "Roboto Condensed";
-}
-
-.login_form_wrapper h1 {
-  font-size: 1.5em;
-  margin-bottom: 0.5em;
-}
-
-.login_form_wrapper h2 {
-  font-size: 1.2em;
-  margin-bottom: 0.3em;
-}
-
-.center-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 95vh;
-}
-
-.nvar {
-  margin: 1em;
-  padding: 1em;
-  border: 1px solid $accent;
-}
-.filler {
-  display: table-cell;
+.details-on-map {
+  position: relative;
   width: 100%;
 }
-.stationInfo {
-  display: table-cell;
-  width: 12em;
-  text-align: right;
-  vertical-align: top;
+#map {
+  position: absolute;
+  top: 0;
+  box-sizing: content-box;
+  height: inherit;
+  width: 100%;
 }
-.logo {
-  font-size: 2em;
-  display: table-cell;
+.paper-map {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  perspective: 150rem;
+  opacity: 0;
+}
+.map-side {
+  box-sizing: content-box;
+  width: 25vw;
+  height: 300px;
+  background-color: rgba(0, 0, 0, .2);
+  outline: 1px solid transparent;
+  overflow: hidden;
+
+  &:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    background-color: rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0 2.5rem rgba(233, 229, 220, .15);
+    content: "";
+  }
+  &:nth-of-type(1) {
+    border: none;
+    background-position: 0 0;
+    transform: translateX(12.625vw) rotateY(-60deg);
+  }
+  &:nth-of-type(2) {
+    border:none;
+    background-position: -25vw 0;
+    transform: translateX(12.5vw) rotateY(60deg);
+  }
+  &:nth-of-type(3) {
+    border: none;
+    background-position: -50vw 0;
+    transform: translateX(-12.5vw) rotateY(-60deg);
+  }
+  &:nth-of-type(4) {
+    border: none;
+    background-position: -75vw 0;
+    transform: translateX(-12.625vw) rotateY(60deg);
+  }
+}
+.show-map {
+  &.details-on-map {
+    height: 300px;
+  }
+  & #map {
+    visibility: visible;
+    animation: fadeIn 1s 1.75s linear forwards;
+  }
+  & .paper-map {
+    animation: paperMapFadeIn 0.83s ease-in forwards,
+      fadeOut 1s 4s linear forwards;
+  }
+  & .map-side {
+    &:before {
+      animation: fadeOut 0.5s 0.83s forwards ease-out;
+    }
+    &:nth-of-type(1) {
+      animation: openMapOuter 0.83s 0.83s linear forwards;
+    }
+    &:nth-of-type(2) {
+      animation: openMapInnerLeft 0.83s 0.83s linear forwards;
+    }
+    &:nth-of-type(3) {
+      animation: openMapInnerRight 0.83s 0.83s linear forwards;
+    }
+    &:nth-of-type(4) {
+      animation: openMapOuter 0.83s 0.83s linear forwards;
+    }
+  }
+}
+.map-side:nth-of-type(1), .map-side:nth-of-type(3){
+  transform-origin: 100% 0;
+  box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.3);
+}
+.map-side:nth-of-type(2), .map-side:nth-of-type(4) {
+  transform-origin: 0 0;
+  box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.3);
 }
 
-.rightcol {
-  width: calc(30% - 1em);
-  float: right;
+@keyframes openMapOuter {
+  100% {
+    transform: translateX(0) rotateY(0deg);
+    box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  }
+}
+@keyframes openMapInnerLeft {
+  0% {transform: translateX(12.5vw) rotateY(60deg);}
+  20% {transform: translateX(10vw) rotateY(53deg);}
+  38% {transform: translateX(7.75vw) rotateY(46.2deg);}
+  50% {transform: translateX(6.25vw) rotateY(41.5deg);}
+  65% {transform: translateX(4.375vw) rotateY(34.5deg);}
+  75% {transform: translateX(3.125vw) rotateY(29deg);}
+  83% {transform: translateX(2.125vw) rotateY(23.8deg);}
+  90% {transform: translateX(1.25vw) rotateY(18.1deg);}
+  95% {transform: translateX(0.625vw) rotateY(12.8deg);}
+  98% {transform: translateX(0.25vw) rotateY(8deg);}
+  99% {transform: translateX(0.125vw) rotateY(5deg);}
+  100% {
+    transform: translateX(0) rotateY(0);
+    box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  }
+}
+@keyframes openMapInnerRight {
+  0% {transform: translateX(-12.5vw) rotateY(-60deg);}
+  20% {transform: translateX(-10vw) rotateY(-53deg);}
+  38% {transform: translateX(-7.75vw) rotateY(-46.2deg);}
+  50% {transform: translateX(-6.25vw) rotateY(-41.5deg);}
+  65% {transform: translateX(-4.375vw) rotateY(-34.5deg);}
+  75% {transform: translateX(-3.125vw) rotateY(-29deg);}
+  83% {transform: translateX(-2.125vw) rotateY(-23.8deg);}
+  90% {transform: translateX(-1.25vw) rotateY(-18.1deg);}
+  95% {transform: translateX(-0.625vwm) rotateY(-12.8deg);}
+  98% {transform: translateX(-0.25vw) rotateY(-8deg);}
+  99% {transform: translateX(-0.125vw) rotateY(-5deg);}
+  100% {
+    transform: translateX(0) rotateY(0);
+    box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  }
+}
+@keyframes fadeOut {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
+@keyframes fadeIn {
+  to {opacity: 1;}
+}
+@keyframes paperMapFadeIn {
+  0% {transform: scale(0, 0.5); opacity: 0;}
+  100% {transform: scale(1); opacity: 1;}
+}
+
+.leaflet-popup {
+
+  .leaflet-popup-close-button {
+    display: none;
+  }
+
+  .leaflet-popup-content-wrapper {
+    background: linear-gradient(#000, #111);
+    border: groove 1px #fff;
+    overflow: hidden;
+    top: 100%;
+    left: 50%; 
+    transform: translate(-50%, -100%);
+    -webkit-transform: translate(-50%, -100%); 
+    position: absolute;
+
+    animation: fadeInPopup 1s ease-out;
+
+    @keyframes fadeInPopup {
+      0% {
+        opacity: 0;
+        height: 0;
+        width: 0;
+      }
+      50% {
+        opacity: 1;
+        height: 0;
+        width: 310px;
+      }
+      100% {
+        opacity: 1;
+        height: 100px;
+        width: 310px;
+      }
+    }
+
+    .leaflet-popup-content {
+      width: 300px;
+      height: 100px;
+      text-align: center;
+      padding: 0;
+      margin: 0 0 0 10px;
+      overflow: hidden;
+
+      div {
+        height: 100%;
+
+        .caption {
+          color: #F1F1F1;
+          height: 100%;
+          white-space: nowrap;
+        }
+
+        hr {
+          //height: 5px;
+          //border-right: none;
+          border: groove 1.35px #FFF;
+          box-shadow: 0 0 3px #000;
+        }
+
+        svg {
+          float: left;
+          height: 120px;
+          width: 120px;
+          fill: #F1F1F1;
+        }
+      }
+    }
+  }
 }

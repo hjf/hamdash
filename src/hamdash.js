@@ -3,7 +3,7 @@ import { withTranslation } from 'react-i18next';
 
 import './i18n';
 
-import './css/reset.css';
+//import './css/reset.css';
 import './css/style.scss';
 
 
@@ -13,21 +13,29 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 import Login from './login'
 
+import NTPTime from './components/ntptime/ntptime'
+
 import CallLookup from './components/calllookup/calllookup'
+import SmartMap from './components/map/map'
 import WWV from './components/wwv/wwv'
+
+
 import WWV_fetcher from './components/wwv/fetch'
 const fetchers = []
 fetchers.push(WWV_fetcher)
+
 
 class HamDash extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = { wwv_data: null, country_by_name: null }
+
     this.loginCallback = this.loginCallback.bind(this);
     this.doLogout = this.doLogout.bind(this);
+    this.countryByNameCallback = this.countryByNameCallback.bind(this);
 
   }
-  state = { wwv_data: null }
   doLogout() {
     localStorage.clear()
     this.setState({ "station_info": null })
@@ -39,30 +47,46 @@ class HamDash extends React.Component {
     localStorage.setItem("station_info", JSON.stringify(stationinfo))
     this.setState({ "station_info": stationinfo })
   }
+
+  countryByNameCallback(countryName) {
+    console.log(countryName)
+    this.setState({ country_by_name: countryName })
+  }
+
   render() {
     if (this.state.station_info == null) {
       return <Login parentCallback={this.loginCallback}></Login>
     }
-    return <div className="bodywrapper">
-      <nav className="nvar">
-        <span className="logo">HamDash</span>
-        <span className="filler"></span>
-        <span class="stationInfo">
-          {this.state.station_info.callsign}          <FontAwesomeIcon icon={faSignOutAlt} onClick={this.doLogout} />
-        </span>
+    return <div>
+      <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div className="navbar-brand">
+          <div className="navbar-item">HamDash</div>
+        </div>
+
+        <div className="navbar-menu">
+          <div className="navbar-end">
+            <p className="navbar-item">
+              {this.state.station_info.callsign}
+            </p>
+            <p className="navbar-item" >
+              <FontAwesomeIcon icon={faSignOutAlt} onClick={this.doLogout} />
+            </p>
+          </div>
+        </div>
       </nav>
 
-      <iframe title="map"
-        width="64%" height="350"
-        frameborder="0" scrolling="no"
-        marginheight="0" marginwidth="0"
-        className="component outline"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-153.63281250000003%2C-65.33855045088168%2C94.921875%2C87.7998337606272&amp;layer=mapnik"
-      ></iframe>
-      <div class="rightcol">
-        <WWV wwv_data={this.state.wwv_data}></WWV>
-        <CallLookup ></CallLookup>
-      </div>
+      <section className="section">
+        <div className="columns">
+          <div className="column">
+            <SmartMap home={this.state.station_info.locator} country_by_name={this.state.country_by_name} ></SmartMap>
+          </div>
+          <div className="column">
+            <NTPTime></NTPTime>
+            <WWV wwv_data={this.state.wwv_data}></WWV>
+            <CallLookup onCountryChanged={this.countryByNameCallback}></CallLookup></div>
+
+        </div>
+      </section>
     </div>;
   }
 
