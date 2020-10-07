@@ -1,4 +1,3 @@
-const { faSadCry } = require("@fortawesome/free-solid-svg-icons");
 const axios = require("axios")
 const fs = require("fs")
 const COUNTRIES_CSV_URL = "https://raw.githubusercontent.com/google/dspl/master/samples/google/canonical/countries.csv"
