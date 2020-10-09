@@ -27,13 +27,17 @@ const resources = {
       "CLOOKUP.CALLSIGN": "Callsign",
       "CLOOKUP.LOGIN": "Login",
       "CLOOKUP.LOOKUP": "Find",
-      "LOGIN.PRIVACYPOLICY":"Cookie policy: This sites uses no cookies. Privacy policy: This is a static website. All of your data is stored in your browser.",
-      "CLOOKUP.CALLSIGN_PLACEHOLDER":"enter the callsign to lookup", 
-      "NTPTIME.LABEL_LOCAL_TIME":"Local",
-      "NTPTIME.LABEL_TIME_ERROR":"This device is off by {{offset}}ms",
-      "NTPTIME.TITLE":"UTC TIME",
-      "MAP.MAP_TITLE":"World Map",
-      "MAP.MAP_DISTANCE":"Locator: {{locator}}, Distance: {{distance}}{{km_or_mi}}"
+      "LOGIN.PRIVACYPOLICY": "Cookie policy: This sites uses no cookies. Privacy policy: This is a static website. All of your data is stored in your browser.",
+      "CLOOKUP.CALLSIGN_PLACEHOLDER": "enter the callsign to lookup",
+      "NTPTIME.LABEL_LOCAL_TIME": "Local",
+      "NTPTIME.LABEL_TIME_ERROR": "This device is off by {{offset}}ms",
+      "NTPTIME.TITLE": "UTC Time",
+      "MAP.MAP_TITLE": "World Map",
+      "MAP.MAP_DISTANCE": "Locator: {{locator}}, Distance: {{distance}}{{km_or_mi}}",
+      "WEATHER.WINDS": "N,NNE,NE,ENE,E,ESE,SE,SSE,S,SSW,SW,WSW,W,WNW,NW,NNW",
+      "PSKREPORTER.MONITORS":"Monitors",
+      "PSKREPORTER.SPOTS":"Spots",
+      "PSKREPORTER.LINK":"Full data at",
     }
   },
   es: {
@@ -60,14 +64,14 @@ const resources = {
       "CLOOKUP.CALLSIGN": "Indicativo",
       "CLOOKUP.LOGIN": "Iniciar Sesión",
       "CLOOKUP.LOOKUP": "Buscar",
-      "LOGIN.PRIVACYPOLICY":"Cookie policy: This sites uses no cookies. Privacy policy: This is a static website. All of your data is stored in your browser.",
-      "CLOOKUP.CALLSIGN_PLACEHOLDER":"ingrese la señal distintiva", 
-      "NTPTIME.LABEL_LOCAL_TIME":"Local",
-      "NTPTIME.LABEL_TIME_ERROR":"Este dispositivo tiene un error de {{offset}}ms",
-      "NTPTIME.TITLE":"Hora UTC",
-      "MAP.MAP_TITLE":"Mapa",
-      "MAP.MAP_DISTANCE":"Locator: {{locator}}, Distancia: {{distance}}{{km_or_mi}}"
-
+      "LOGIN.PRIVACYPOLICY": "Cookie policy: This sites uses no cookies. Privacy policy: This is a static website. All of your data is stored in your browser.",
+      "CLOOKUP.CALLSIGN_PLACEHOLDER": "ingrese la señal distintiva",
+      "NTPTIME.LABEL_LOCAL_TIME": "Local",
+      "NTPTIME.LABEL_TIME_ERROR": "Este dispositivo tiene un error de {{offset}}ms",
+      "NTPTIME.TITLE": "Hora UTC",
+      "MAP.MAP_TITLE": "Mapa",
+      "MAP.MAP_DISTANCE": "Locator: {{locator}}, Distancia: {{distance}}{{km_or_mi}}",
+      "WEATHER.WINDS": "N,NNE,NE,ENE,E,ESE,SE,SSE,S,SSO,SO,OSO,O,ONO,NO,NNO"
     }
   }
 };
@@ -78,7 +82,7 @@ i18n
   .init({
     resources,
     lng: "en",
-    
+
     keySeparator: false, // we do not use keys in form messages.welcome
 
     interpolation: {

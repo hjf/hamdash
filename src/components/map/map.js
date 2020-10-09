@@ -16,7 +16,7 @@ class SmartMap extends React.Component {
 
   }
   render() {
-    console.log(this.leafletElement)
+
     const home_marker = this.props.home ? Maidenhead.toLatLon(this.props.home) : null
     let secondary_marker = null
     if (this.props.country_by_name) {

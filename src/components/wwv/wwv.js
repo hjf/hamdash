@@ -1,18 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
-
-var dayjs = require('dayjs')
-require('dayjs/locale/es')
-var localizedFormat = require('dayjs/plugin/localizedFormat')
-var relativeTime = require('dayjs/plugin/relativeTime')
-dayjs.extend(localizedFormat)
-var localeData = require('dayjs/plugin/localeData')
-dayjs.extend(localeData)
+import dayjs from '../../time'
 
 function WWV(props) {
   const { t, i18n } = useTranslation();
-  dayjs.locale(i18n.lng)
-  dayjs.extend(relativeTime)
 
   if (props.wwv_data === null)
     return <p>{t('WWV.LOADING')}</p>

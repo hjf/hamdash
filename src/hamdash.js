@@ -2,54 +2,45 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 
 import './i18n';
-
-//import './css/reset.css';
+import './time'
 import './css/style.scss';
-
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
-
 import Login from './login'
 
 import NTPTime from './components/ntptime/ntptime'
-
+import Weather from './components/weather/weather'
 import CallLookup from './components/calllookup/calllookup'
 import SmartMap from './components/map/map'
 import WWV from './components/wwv/wwv'
-
-
 import WWV_fetcher from './components/wwv/fetch'
+import PSKReporter from './components/pskreporter/pskreporter'
 const fetchers = []
 fetchers.push(WWV_fetcher)
-
 
 class HamDash extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = { wwv_data: null, country_by_name: null }
-
     this.loginCallback = this.loginCallback.bind(this);
     this.doLogout = this.doLogout.bind(this);
     this.countryByNameCallback = this.countryByNameCallback.bind(this);
-
   }
+
   doLogout() {
     localStorage.clear()
     this.setState({ "station_info": null })
-
-
-
   }
+
   loginCallback(stationinfo) {
     localStorage.setItem("station_info", JSON.stringify(stationinfo))
     this.setState({ "station_info": stationinfo })
   }
 
   countryByNameCallback(countryName) {
-    console.log(countryName)
     this.setState({ country_by_name: countryName })
   }
 
@@ -66,11 +57,17 @@ class HamDash extends React.Component {
         <div className="navbar-menu">
           <div className="navbar-end">
             <p className="navbar-item">
+              <b>
+                <Weather home={this.state.station_info.locator} />
+              </b>
+            </p>
+
+            <p className="navbar-item">
               {this.state.station_info.callsign}
             </p>
-            <p className="navbar-item" >
-              <FontAwesomeIcon icon={faSignOutAlt} onClick={this.doLogout} />
-            </p>
+            <button className="button is-primary navbar-item" onClick={this.doLogout} >
+              <FontAwesomeIcon icon={faSignOutAlt} />
+            </button>
           </div>
         </div>
       </nav>
@@ -79,9 +76,12 @@ class HamDash extends React.Component {
         <div className="tile is-ancestor">
           <div className="tile is-vertical ">
             <div className="tile">
-              <div className="tile is-parent">
+              <div className="tile is-parent is-vertical">
                 <div className="tile is-child">
                   <SmartMap className=" " home={this.state.station_info.locator} country_by_name={this.state.country_by_name}> </SmartMap>
+                </div>
+                <div className="tile is-child">
+                  <PSKReporter callsign={this.state.station_info.callsign} />
                 </div>
               </div>
             </div>
@@ -99,13 +99,10 @@ class HamDash extends React.Component {
                 <div className="tile is-child ">
                   <CallLookup onCountryChanged={this.countryByNameCallback}></CallLookup>
                 </div>
-
-
               </div>
             </div>
           </div>
         </div>
-
       </section >
     </div >;
   }

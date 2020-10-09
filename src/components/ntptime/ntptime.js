@@ -1,18 +1,8 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next';
+import dayjs from '../../time';
 
 const timesync = require('timesync')
-
-
-var dayjs = require('dayjs')
-require('dayjs/locale/es')
-var localizedFormat = require('dayjs/plugin/localizedFormat')
-var relativeTime = require('dayjs/plugin/relativeTime')
-dayjs.extend(localizedFormat)
-var localeData = require('dayjs/plugin/localeData')
-dayjs.extend(localeData)
-var utc = require('dayjs/plugin/utc')
-dayjs.extend(utc)
 
 class NTPTime extends React.Component {
 
@@ -25,9 +15,9 @@ class NTPTime extends React.Component {
 
   componentDidMount() {
     dayjs.locale(this.props.i18n.lng)
-    dayjs.extend(relativeTime)
+
     this.ts = timesync.create({
-      server: 'http://104.236.243.155:8081/timesync',
+      server: '//timeserver.hjf.com.ar/timesync',
       interval: 10000
     });
 
