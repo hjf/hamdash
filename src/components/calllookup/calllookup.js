@@ -56,7 +56,7 @@ class CallLookup extends React.Component {
 
       if (res.status === 200) {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
-        console.log(jsonResponse)
+
         if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error)
           throw Error(jsonResponse.QRZDatabase.Session.Error)
 
@@ -66,8 +66,11 @@ class CallLookup extends React.Component {
             username: username,
             password: password
           }
-          localStorage.setItem('CALL_LOOKUP_APIKEY', JSON.stringify(apikey))
-          this.setState(apikey)
+          setTimeout(() => {
+            localStorage.setItem('CALL_LOOKUP_APIKEY', JSON.stringify(apikey))
+            this.setState(apikey)
+          }, 0);
+
         } else {
           throw Error("Could not find API Key")
         }
