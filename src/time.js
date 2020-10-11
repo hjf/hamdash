@@ -1,5 +1,4 @@
-var dayjs = require('dayjs')
-require('dayjs/locale/es')
+import * as dayjs from 'dayjs'
 
 var localizedFormat = require('dayjs/plugin/localizedFormat')
 var relativeTime = require('dayjs/plugin/relativeTime')

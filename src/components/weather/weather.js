@@ -7,8 +7,8 @@ const metarp = require('metar-parser')
 
 const DATA_URL_BASE = 'https://9992sjmz70.execute-api.sa-east-1.amazonaws.com/default/getMetarByLatLong'
 
-
 class Weather extends React.Component {
+  intervalHandler = null
   constructor(props) {
     super(props)
     this.state = { weather: null, expires: new Date(0), error: "" }
@@ -16,12 +16,17 @@ class Weather extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
-      this.refresh();
-    }, 60000);
+    if (!this.intervalHandler)
+      setInterval(() => {
+        this.refresh();
+      }, 60000);
     this.refresh();
   }
 
+  componentWillUnmount() {
+    if (this.intervalHandler)
+      clearInterval(this.intervalHandler)
+  }
 
   render() {
 
@@ -80,8 +85,9 @@ class Weather extends React.Component {
     let latlon = Maidenhead.toLatLon(this.props.home)
     let lat = latlon[0].toFixed(2)
     let lon = latlon[1].toFixed(2)
+    
     try {
-      
+
       let res = await axios.get(DATA_URL_BASE, { params: { lat: lat, lon: lon } });
       if (res.status === 200) {
         if (res.data.error) {

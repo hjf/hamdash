@@ -22,6 +22,8 @@ fetchers.push(WWV_fetcher)
 
 class HamDash extends React.Component {
 
+  intervalHandler = null
+
   constructor(props) {
     super(props);
     this.state = { wwv_data: null, country_by_name: null }
@@ -78,7 +80,11 @@ class HamDash extends React.Component {
             <div className="tile">
               <div className="tile is-parent is-vertical">
                 <div className="tile is-child">
-                  <SmartMap className=" " home={this.state.station_info.locator} country_by_name={this.state.country_by_name}> </SmartMap>
+                  <SmartMap
+                    home={this.state.station_info.locator}
+                    remote_locator_by_country_name={this.state.country_by_name}
+                  >
+                  </SmartMap>
                 </div>
                 <div className="tile is-child">
                   <PSKReporter callsign={this.state.station_info.callsign} />
@@ -124,11 +130,17 @@ class HamDash extends React.Component {
     this.setState({ "station_info": station_info })
 
     this.refreshComponents()
-    setInterval(async () => {
-      if (this.state.station_info)
-        await this.refreshComponents()
+    if (!this.intervalHandler)
+      this.intervalHandler = setInterval(async () => {
+        if (this.state.station_info)
+          await this.refreshComponents()
 
-    }, 60000)
+      }, 60000)
+  }
+
+  componentWillUnmount() {
+    if (this.intervalHandler)
+      clearInterval(this.intervalHandler)
   }
 }
 

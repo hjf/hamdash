@@ -6,6 +6,7 @@ const DATA_URL_BASE = 'https://170r8c5e4f.execute-api.sa-east-1.amazonaws.com/de
 class PSKReporter extends React.Component {
 
   ts = null
+  intervalHandler = null
 
   constructor(props) {
     super(props);
@@ -14,9 +15,15 @@ class PSKReporter extends React.Component {
 
   componentDidMount() {
     this.refresh();
-    setInterval(() => {
-      this.refresh();
-    }, 6 * 60 * 1000);
+    if (!this.intervalHandler)
+      setInterval(() => {
+        this.refresh();
+      }, 6 * 60 * 1000);
+  }
+
+  componentWillUnmount() {
+    if (this.intervalHandler)
+      clearInterval(this.intervalHandler)
   }
 
   render() {
@@ -30,7 +37,7 @@ class PSKReporter extends React.Component {
 
       <div className="card-content">
         {this.props.t('PSKREPORTER.MONITORS')}: {this.state.monitors}, {this.props.t('PSKREPORTER.SPOTS')}: {this.state.spots}
-        <span style={{ "float": "right", "font-style":"italic" }}>{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></span>
+        <span style={{ "float": "right", fontStyle: "italic" }}>{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></span>
       </div>
     </div >
 
@@ -53,7 +60,6 @@ class PSKReporter extends React.Component {
         if (res.data.error) {
           this.setState({ error: res.data.error })
         } else {
-          console.log(res.data)
           this.setState(
             {
               monitors: res.data.data.monitors,

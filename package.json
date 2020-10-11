@@ -24,6 +24,7 @@
     "react-dom": "^16.13.1",
     "react-i18next": "^11.7.3",
     "react-leaflet": "^2.7.0",
+    "react-leaflet-geodesic": "^1.0.3",
     "react-scripts": "3.4.3",
     "timesync": "^1.0.8",
     "xml2js": "^0.4.23"

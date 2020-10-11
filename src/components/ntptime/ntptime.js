@@ -7,6 +7,7 @@ const timesync = require('timesync')
 class NTPTime extends React.Component {
 
   ts = null
+  intervalHandler = null
 
   constructor(props) {
     super(props);
@@ -26,14 +27,20 @@ class NTPTime extends React.Component {
       this.setState({ offset: `${offset}` })
     });
 
-    setInterval(() => {
-      if (this.ts) {
-        this.setState({
-          servertime: dayjs(this.ts.now()).utc().format("HH:mm:ss"),
-          localtime: dayjs().format("LTS ddd l")
-        })
-      }
-    }, 1000);
+    if (!this.intervalHandler)
+      this.intervalHandler = setInterval(() => {
+        if (this.ts) {
+          this.setState({
+            servertime: dayjs(this.ts.now()).utc().format("HH:mm:ss"),
+            localtime: dayjs().format("LTS ddd l")
+          })
+        }
+      }, 1000);
+  }
+
+  componentWillUnmount() {
+    if (this.intervalHandler)
+      clearInterval(this.intervalHandler)
   }
 
 

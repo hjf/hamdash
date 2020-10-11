@@ -9,12 +9,14 @@ class CallLookup extends React.Component {
   constructor(props) {
     super(props);
     this.handleInput = this.handleInput.bind(this);
+    this.doLogin = this.doLogin.bind(this);
     this.qrzLogin = this.qrzLogin.bind(this);
+    this.doLookup = this.doLookup.bind(this);
     this.qrzLookup = this.qrzLookup.bind(this);
 
     let credentials = localStorage.getItem("CALL_LOOKUP_APIKEY")
     if (credentials === null)
-      credentials = { apikey: "" }
+      credentials = { apikey: "", username: "", password: "" }
     else
       credentials = JSON.parse(credentials)
 
@@ -32,15 +34,23 @@ class CallLookup extends React.Component {
 
   }
 
-  async qrzLogin() {
+  doLogin() {
+    this.qrzLogin(this.state.input_username, this.state.input_password)
+  }
+  doLookup() {
+    this.qrzLookup(true)
+  }
+
+  async qrzLogin(username, password) {
+
     this.setState({ errormessage: "" })
     this.setState({ button_login_loading: true })
     try {
       let res = await axios.get(QRZCOM_XMLDATA_URL,
         {
           params: {
-            username: this.state.input_username,
-            password: this.state.input_password
+            username: username,
+            password: password
           }
         })
 
@@ -48,27 +58,35 @@ class CallLookup extends React.Component {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
         console.log(jsonResponse)
         if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error)
-          throw jsonResponse.QRZDatabase.Session.Error
+          throw Error(jsonResponse.QRZDatabase.Session.Error)
 
         if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Key) {
-          let apikey = { apikey: jsonResponse.QRZDatabase.Session.Key }
+          let apikey = {
+            apikey: jsonResponse.QRZDatabase.Session.Key,
+            username: username,
+            password: password
+          }
           localStorage.setItem('CALL_LOOKUP_APIKEY', JSON.stringify(apikey))
           this.setState(apikey)
+        } else {
+          throw Error("Could not find API Key")
         }
-        throw "Could not find API Key"
       }
-      throw res.error || "error"
+      throw Error(res.error) || Error("Unknown error")
 
     } catch (error) {
-      this.setState({ errormessage: error })
+      console.error(error)
+      this.setState({ errormessage: error.message, apikey: "" })
     }
     this.setState({ button_login_loading: false })
 
   }
 
-  async qrzLookup() {
+  async qrzLookup(autorelogin) {
     this.setState({ errormessage: "" })
+    this.setState({ lookup_results: { name: "", city: "", country: "" } })
     this.setState({ button_lookup_loading: true })
+
     try {
       let res = await axios.get(QRZCOM_XMLDATA_URL,
         {
@@ -80,16 +98,17 @@ class CallLookup extends React.Component {
 
       if (res.status === 200) {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
-        console.log(jsonResponse)
-        if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error) {
-          if (jsonResponse.QRZDatabase.Session.Error === "Session Timeout") {
-            //TODO: auto relogin
 
-            localStorage.removeItem("CALL_LOOKUP_APIKEY")
-            let apikey = { apikey: '' }
-            this.setState(apikey)
+        if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error) {
+          if (jsonResponse.QRZDatabase.Session.Error === "Session Timeout" && autorelogin) {
+            await this.qrzLogin(this.state.username, this.state.password)
+            setTimeout(() => {
+              this.qrzLookup(false)
+            }, 0);
+            return
+          } else {
+            throw Error(jsonResponse.QRZDatabase.Session.Error)
           }
-          throw jsonResponse.QRZDatabase.Session.Error
         }
 
         this.setState({
@@ -101,12 +120,13 @@ class CallLookup extends React.Component {
         })
         if (this.props.onCountryChanged)
           this.props.onCountryChanged(jsonResponse.QRZDatabase.Callsign.country || null)
+      } else {
+        throw Error(res.error) || Error("error")
       }
-      throw res.error || "error"
 
     } catch (error) {
-      console.log(error)
-      this.setState({ errormessage: error })
+      console.error(error)
+      this.setState({ errormessage: error.message })
     }
     this.setState({ button_lookup_loading: false })
   }
@@ -140,7 +160,7 @@ class CallLookup extends React.Component {
             <div className="field ">
               <button className={"button is-primary is-fullwidth " + (this.state.button_login_loading ? "is-loading" : "")}
                 type="button" name="doValidateQRZ"
-                onClick={this.qrzLogin}>
+                onClick={this.doLogin}>
                 {this.props.t('CLOOKUP.LOGIN')}</button>
             </div>
           </div>
@@ -163,7 +183,7 @@ class CallLookup extends React.Component {
                 placeholder={this.props.t('CLOOKUP.CALLSIGN_PLACEHOLDER')}></input>
             </div>
             <div className="control">
-              <button className={"button is-primary is-small " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.qrzLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
+              <button className={"button is-primary is-small " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
             </div>
           </div>
         </div>
