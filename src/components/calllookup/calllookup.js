@@ -68,12 +68,12 @@ class CallLookup extends React.Component {
           }
           localStorage.setItem('CALL_LOOKUP_APIKEY', JSON.stringify(apikey))
           this.setState(apikey)
-          this.forceUpdate()
         } else {
           throw Error("Could not find API Key")
         }
+      } else {
+        throw Error(res.error) || Error("Unknown error")
       }
-      throw Error(res.error) || Error("Unknown error")
 
     } catch (error) {
       console.error(error)
@@ -106,21 +106,20 @@ class CallLookup extends React.Component {
             setTimeout(() => {
               this.qrzLookup(false)
             }, 0);
-            return
           } else {
             throw Error(jsonResponse.QRZDatabase.Session.Error)
           }
+        } else {
+          this.setState({
+            lookup_results: {
+              name: (jsonResponse.QRZDatabase.Callsign.fname || "") + " " + (jsonResponse.QRZDatabase.Callsign.name || ""),
+              city: (jsonResponse.QRZDatabase.Callsign.addr2 || "") + ", " + (jsonResponse.QRZDatabase.Callsign.state || ""),
+              country: jsonResponse.QRZDatabase.Callsign.country || ""
+            }
+          })
+          if (this.props.onCountryChanged)
+            this.props.onCountryChanged(jsonResponse.QRZDatabase.Callsign.country || null)
         }
-
-        this.setState({
-          lookup_results: {
-            name: (jsonResponse.QRZDatabase.Callsign.fname || "") + " " + (jsonResponse.QRZDatabase.Callsign.name || ""),
-            city: (jsonResponse.QRZDatabase.Callsign.addr2 || "") + ", " + (jsonResponse.QRZDatabase.Callsign.state || ""),
-            country: jsonResponse.QRZDatabase.Callsign.country || ""
-          }
-        })
-        if (this.props.onCountryChanged)
-          this.props.onCountryChanged(jsonResponse.QRZDatabase.Callsign.country || null)
       } else {
         throw Error(res.error) || Error("error")
       }
