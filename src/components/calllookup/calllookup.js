@@ -68,6 +68,7 @@ class CallLookup extends React.Component {
           }
           localStorage.setItem('CALL_LOOKUP_APIKEY', JSON.stringify(apikey))
           this.setState(apikey)
+          this.forceUpdate()
         } else {
           throw Error("Could not find API Key")
         }
@@ -100,7 +101,7 @@ class CallLookup extends React.Component {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
 
         if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error) {
-          if (jsonResponse.QRZDatabase.Session.Error === "Session Timeout" && autorelogin) {
+          if ((jsonResponse.QRZDatabase.Session.Error === "Session Timeout" || jsonResponse.QRZDatabase.Session.Error === "Invalid session key") && autorelogin) {
             await this.qrzLogin(this.state.username, this.state.password)
             setTimeout(() => {
               this.qrzLookup(false)
