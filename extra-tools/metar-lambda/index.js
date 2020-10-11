@@ -55,6 +55,11 @@ exports.handler = async (event) => {
     rv.error = JSON.stringify(error)
   }
 
+  if (!rv.error)
+    response.headers = {
+      "Cache-Control": "max-age: 3600",
+      "Expires": (new Date(Date.now() + 3600000)).toUTCString()
+    }
   response.body = JSON.stringify(rv)
   return response
 };

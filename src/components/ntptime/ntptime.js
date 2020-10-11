@@ -19,7 +19,7 @@ class NTPTime extends React.Component {
 
     this.ts = timesync.create({
       server: '//timeserver.hjf.com.ar/timesync',
-      interval: 10000
+      interval: 100000
     });
 
     this.ts.on('change', (offset) => {

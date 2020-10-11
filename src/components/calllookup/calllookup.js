@@ -1,5 +1,6 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next';
+
 const QRZCOM_XMLDATA_URL = 'https://xmldata.qrz.com/xml/current/'
 const axios = require('axios').default;
 const xml2js = require('xml2js')
@@ -20,39 +21,34 @@ class CallLookup extends React.Component {
     else
       credentials = JSON.parse(credentials)
 
-    this.state = credentials
-    this.state.callsign = ""
-    this.state.lookup_results = { name: "", country: "", city: "" }
-    this.state.input_username = ""
-    this.state.input_password = ""
-    this.state.errormessage = ""
-    this.state.button_login_loading = false
-    this.state.button_lookup_loading = false
-  }
-
-  componentDidMount() {
-
+    this.state = {
+      ...credentials,
+      ...{
+        callsign: "",
+        lookup_results: { name: "", country: "", city: "" },
+        input_username: "",
+        input_password: "",
+        errormessage: "",
+        button_login_loading: false,
+        button_lookup_loading: false
+      }
+    }
   }
 
   doLogin() {
     this.qrzLogin(this.state.input_username, this.state.input_password)
   }
+  
   doLookup() {
     this.qrzLookup(true)
   }
 
   async qrzLogin(username, password) {
 
-    this.setState({ errormessage: "" })
-    this.setState({ button_login_loading: true })
+    this.setState({ errormessage: "", button_login_loading: true })
     try {
       let res = await axios.get(QRZCOM_XMLDATA_URL,
-        {
-          params: {
-            username: username,
-            password: password
-          }
-        })
+        { params: { username: username, password: password } })
 
       if (res.status === 200) {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
@@ -93,12 +89,7 @@ class CallLookup extends React.Component {
 
     try {
       let res = await axios.get(QRZCOM_XMLDATA_URL,
-        {
-          params: {
-            s: this.state.apikey,
-            callsign: this.state.callsign
-          }
-        })
+        { params: { s: this.state.apikey, callsign: this.state.callsign } })
 
       if (res.status === 200) {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
@@ -179,14 +170,14 @@ class CallLookup extends React.Component {
       </div>
       <div className="card-content">
         <div className="content">
-          <div className="field has-addons">
-            <div className="control">
-              <input type="text" name="callsign" className="input is-small"
+          <div className="field has-addons has-addons-fullwidth is-fullwidth">
+            <div className="control is-fullwidth">
+              <input type="text" name="callsign" className="input is-fullwidth"
                 value={this.state.callsign} onChange={this.handleInput}
                 placeholder={this.props.t('CLOOKUP.CALLSIGN_PLACEHOLDER')}></input>
             </div>
             <div className="control">
-              <button className={"button is-primary is-small " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
+              <button className={"button is-primary is-fullwidth " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
             </div>
           </div>
         </div>

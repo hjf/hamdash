@@ -48,7 +48,7 @@ class SmartMap extends React.Component {
     if (!foundCountry)
       return ""
 
-    return (new Maidenhead(foundCountry.coords[0], foundCountry.coords[1], 3)).locator
+    return (new Maidenhead(...foundCountry.coords, 3)).locator
   }
 
   componentDidMount() {
@@ -83,18 +83,11 @@ class SmartMap extends React.Component {
         const homemh = new Maidenhead()
         homemh.locator = this.props.home
         bearing = homemh.bearingTo(remotemh)
+        distance = Math.round(homemh.distanceTo(remotemh))
       }
       catch (err) {
         console.error(err)
       }
-    }
-
-    if (home_marker && secondary_marker && this.refs.map) {
-      home_marker[0] = Number(home_marker[0])
-      home_marker[1] = Number(home_marker[1])
-      secondary_marker[0] = Number(secondary_marker[0])
-      secondary_marker[1] = Number(secondary_marker[1])
-      distance = Math.round(this.refs.map.leafletElement.distance(home_marker, secondary_marker) / 1000)
     }
 
     return <div className="card">
@@ -106,7 +99,7 @@ class SmartMap extends React.Component {
 
       <div className="card-content">
         <div className="content">
-          <Map ref='map' center={position} zoom={1} className="leaflet-container">
+          <Map ref='map' center={home_marker} zoom={1} className="leaflet-container">
 
             {/* <TileLayer
           attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
@@ -217,7 +210,7 @@ class SmartMap extends React.Component {
     let country = this.state.countries[selectedIndex]
     country = countries_by_name[country]
     if (country) {
-      let mh = new Maidenhead(country.coords[0], country.coords[1], 3)
+      let mh = new Maidenhead(...country.coords, 3)
       this.setState({ remote_locator: mh.locator })
     }
   }

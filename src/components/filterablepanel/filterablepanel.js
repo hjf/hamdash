@@ -14,6 +14,7 @@ class FilterablePanel extends React.Component {
     this.handleInput = this.handleInput.bind(this);
     this.filterCountries = this.doFilterOptions.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.notifyParent = this.clickHandler.bind(this);
 
   }
 
@@ -60,10 +61,10 @@ class FilterablePanel extends React.Component {
 
   onKeyDown(e) {
     if (e.key === "Escape")
-      this.notifyParent(null)
+      this.clickHandler(null)
 
     else if (e.key === "Enter")
-      this.notifyParent(this.state.filteredOptions[this.state.selectedIndex].key)
+      this.clickHandler(this.state.filteredOptions[this.state.selectedIndex].key)
 
     else {
       let si = this.state.selectedIndex
@@ -85,19 +86,7 @@ class FilterablePanel extends React.Component {
   }
 
   render() {
-    let options = []
-
-    let i = 0
-
-
     if (!this.props.modal) {
-      for (let c of this.state.filteredOptions) {
-        options.push(<a href="#"
-          className={"panel-block " + (i === this.state.selectedIndex ? "is-active" : "")}
-          onClick={() => { this.notifyParent(c.key) }}
-          key={c.key} > {c.value}</ a >)
-        i++
-      }
       return <div className="panel">
         <p className="panel-heading">{this.props.title}</p>
         <div className="panel-block">
@@ -111,30 +100,24 @@ class FilterablePanel extends React.Component {
           </p>
         </div>
         <div >
-          {options}
+          <PanelItems options={this.state.filteredOptions} selectedIndex={this.state.selectedIndex} handler={this.clickHandler} />
         </div>
       </div>;
     } else {
-      for (let c of this.state.filteredOptions) {
-        options.push(<a href="#" style={{ borderBottom: "1px solid #333" }}
-          className={" panel-block " + (i === this.state.selectedIndex ? "is-active" : "")}
-          onClick={() => { this.notifyParent(c.key) }}
-          key={c.key} > {c.value}</ a >)
-        i++
-      }
+
       return <div className="modal is-active">
-        <div onClick={() => { this.notifyParent(null) }} className="modal-background" style={{ backgroundColor: "black", opacity: 0.8 }}></div>
+        <div onClick={this.clickHandler} className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">{this.props.title}</p>
 
-            <button onClick={() => { this.notifyParent(null) }} className="delete" aria-label="close"></button>
+            <button onClick={this.clickHandler} className="delete" aria-label="close"></button>
           </header>
-          <section className="modal-card-body" style={{ padding: 0, backgroundColor: "#121212" }}>
+          <section className="modal-card-body filterable-panel-body " >
             <input className="input" type="text" placeholder=""
               ref={(input) => { this.filterInput = input; }}
               name="filter" value={this.state.filter} onChange={this.handleInput} onKeyDown={this.onKeyDown} />
-            {options}
+            <PanelItems options={this.state.filteredOptions} selectedIndex={this.state.selectedIndex} handler={this.clickHandler} />
           </section>
           {/* <footer className="modal-card-foot">
             <button className="button is-success">Save changes</button>
@@ -143,14 +126,29 @@ class FilterablePanel extends React.Component {
         </div>
       </div>;
     }
-
   }
 
+  clickHandler(e) {
+    if (this.props.parentHandler) {
+      let index = null
 
-  notifyParent(index) {
-    if (this.props.parentHandler)
+      if (e && e.target && e.target.getAttribute)
+        index = e.target.getAttribute("data-index");
+
       this.props.parentHandler(index)
+    }
   }
+}
+
+function PanelItems(props) {
+  let i = 0;
+  return props.options.map((c) => {
+    return <a href="#"
+      className={" panel-block " + (i++ === props.selectedIndex ? "is-active" : "")}
+      onClick={props.handler}
+      data-index={c.key}
+      key={c.key} > {c.value}</ a >
+  })
 }
 
 FilterablePanel.defaultProps = {

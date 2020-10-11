@@ -1,5 +1,7 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next';
+import { Level } from '../levels/level'
+
 const axios = require('axios').default;
 const DATA_URL_BASE = 'https://170r8c5e4f.execute-api.sa-east-1.amazonaws.com/default/getSpots'
 
@@ -36,8 +38,13 @@ class PSKReporter extends React.Component {
       </div>
 
       <div className="card-content">
-        {this.props.t('PSKREPORTER.MONITORS')}: {this.state.monitors}, {this.props.t('PSKREPORTER.SPOTS')}: {this.state.spots}
-        <span style={{ "float": "right", fontStyle: "italic" }}>{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></span>
+        <Level data={
+          [
+            { title: this.props.t('PSKREPORTER.MONITORS'), value: this.state.monitors },
+            { title: this.props.t('PSKREPORTER.SPOTS'), value: this.state.spots },
+          ]
+        }></Level>
+        <span className="is-pulled-right is-italic">{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></span>
       </div>
     </div >
 

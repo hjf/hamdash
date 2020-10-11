@@ -82,12 +82,10 @@ class Weather extends React.Component {
       return
     }
 
-    let latlon = Maidenhead.toLatLon(this.props.home)
-    let lat = latlon[0].toFixed(2)
-    let lon = latlon[1].toFixed(2)
-    
-    try {
+    const latlon = Maidenhead.toLatLon(this.props.home)
+    const [lat, lon] = latlon.map((x) => x.toFixed(2))
 
+    try {
       let res = await axios.get(DATA_URL_BASE, { params: { lat: lat, lon: lon } });
       if (res.status === 200) {
         if (res.data.error) {
@@ -105,9 +103,13 @@ class Weather extends React.Component {
             let winddir = ""
             try {
               if (parsed.wind.direction) {
-                let winddirs = this.props.t('WEATHER.WINDS').split(",")
-                if (winddirs.length === 16) {
-                  winddir = winddirs[Math.round(parsed.wind.direction / 24.0)]
+                if (parsed.wind.direction === 'VRB')
+                  winddir = "VRB"
+                else {
+                  let winddirs = this.props.t('WEATHER.WINDS').split(",")
+                  if (winddirs.length === 16) {
+                    winddir = winddirs[Math.round(parsed.wind.direction / 24.0)]
+                  }
                 }
               }
             } catch (err) {
@@ -124,11 +126,7 @@ class Weather extends React.Component {
                 pressure_mb: parsed.altimeter.millibars
               }
             })
-            this.setState(
-              {
-                expires: new Date(Date.now() + 1000 * 60)
-              }
-            )
+            this.setState({ expires: new Date(Date.now() + 1000 * 60) })
             return
           }
         }

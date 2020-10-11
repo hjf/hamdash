@@ -1,17 +1,37 @@
+@media (prefers-color-scheme: dark) {
+  .panel-block {
+    border-bottom: 1px solid black !important ;
+  }
+
+  .modal-card-body {
+    background-color: #121212 !important;
+  }
+
+  .modal-background {
+    background-color: black !important;
+    opacity: 0.8 !important;
+  }
+
+  .filterable-panel-body {
+    padding: 0 !important;
+  }
+}
+
 .worldmap {
   height: 180px;
 }
-
 
 .leaflet-container {
   width: 100%;
   height: 300px;
   opacity: 0;
-  animation: fadeInLeaflet .5s ease forwards 0s;
+  animation: fadeInLeaflet 0.5s ease forwards 0s;
 }
 
 @keyframes fadeInLeaflet {
-  to {opacity: 1;}
+  to {
+    opacity: 1;
+  }
 }
 
 .show-map {
@@ -19,7 +39,7 @@
   position: relative;
   width: inherit;
   height: 300px;
-  animation: fadeInShadow .5s ease forwards 0s;
+  animation: fadeInShadow 0.5s ease forwards 0s;
 }
 
 @keyframes fadeInShadow {
@@ -27,7 +47,7 @@
     box-shadow: none;
   }
   100% {
-    box-shadow: 0 0 25px 20px rgba(0, 0, 0, .7);
+    box-shadow: 0 0 25px 20px rgba(0, 0, 0, 0.7);
   }
 }
 
@@ -54,7 +74,7 @@
   box-sizing: content-box;
   width: 25vw;
   height: 300px;
-  background-color: rgba(0, 0, 0, .2);
+  background-color: rgba(0, 0, 0, 0.2);
   outline: 1px solid transparent;
   overflow: hidden;
 
@@ -65,8 +85,8 @@
     left: 0;
     right: 0;
     display: block;
-    background-color: rgba(0, 0, 0, .3);
-    box-shadow: inset 0 0 2.5rem rgba(233, 229, 220, .15);
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 2.5rem rgba(233, 229, 220, 0.15);
     content: "";
   }
   &:nth-of-type(1) {
@@ -75,7 +95,7 @@
     transform: translateX(12.625vw) rotateY(-60deg);
   }
   &:nth-of-type(2) {
-    border:none;
+    border: none;
     background-position: -25vw 0;
     transform: translateX(12.5vw) rotateY(60deg);
   }
@@ -99,8 +119,7 @@
     animation: fadeIn 1s 1.75s linear forwards;
   }
   & .paper-map {
-    animation: paperMapFadeIn 0.83s ease-in forwards,
-      fadeOut 1s 4s linear forwards;
+    animation: paperMapFadeIn 0.83s ease-in forwards, fadeOut 1s 4s linear forwards;
   }
   & .map-side {
     &:before {
@@ -120,11 +139,13 @@
     }
   }
 }
-.map-side:nth-of-type(1), .map-side:nth-of-type(3){
+.map-side:nth-of-type(1),
+.map-side:nth-of-type(3) {
   transform-origin: 100% 0;
   box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.3);
 }
-.map-side:nth-of-type(2), .map-side:nth-of-type(4) {
+.map-side:nth-of-type(2),
+.map-side:nth-of-type(4) {
   transform-origin: 0 0;
   box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.3);
 }
@@ -136,53 +157,108 @@
   }
 }
 @keyframes openMapInnerLeft {
-  0% {transform: translateX(12.5vw) rotateY(60deg);}
-  20% {transform: translateX(10vw) rotateY(53deg);}
-  38% {transform: translateX(7.75vw) rotateY(46.2deg);}
-  50% {transform: translateX(6.25vw) rotateY(41.5deg);}
-  65% {transform: translateX(4.375vw) rotateY(34.5deg);}
-  75% {transform: translateX(3.125vw) rotateY(29deg);}
-  83% {transform: translateX(2.125vw) rotateY(23.8deg);}
-  90% {transform: translateX(1.25vw) rotateY(18.1deg);}
-  95% {transform: translateX(0.625vw) rotateY(12.8deg);}
-  98% {transform: translateX(0.25vw) rotateY(8deg);}
-  99% {transform: translateX(0.125vw) rotateY(5deg);}
+  0% {
+    transform: translateX(12.5vw) rotateY(60deg);
+  }
+  20% {
+    transform: translateX(10vw) rotateY(53deg);
+  }
+  38% {
+    transform: translateX(7.75vw) rotateY(46.2deg);
+  }
+  50% {
+    transform: translateX(6.25vw) rotateY(41.5deg);
+  }
+  65% {
+    transform: translateX(4.375vw) rotateY(34.5deg);
+  }
+  75% {
+    transform: translateX(3.125vw) rotateY(29deg);
+  }
+  83% {
+    transform: translateX(2.125vw) rotateY(23.8deg);
+  }
+  90% {
+    transform: translateX(1.25vw) rotateY(18.1deg);
+  }
+  95% {
+    transform: translateX(0.625vw) rotateY(12.8deg);
+  }
+  98% {
+    transform: translateX(0.25vw) rotateY(8deg);
+  }
+  99% {
+    transform: translateX(0.125vw) rotateY(5deg);
+  }
   100% {
     transform: translateX(0) rotateY(0);
     box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.1);
   }
 }
 @keyframes openMapInnerRight {
-  0% {transform: translateX(-12.5vw) rotateY(-60deg);}
-  20% {transform: translateX(-10vw) rotateY(-53deg);}
-  38% {transform: translateX(-7.75vw) rotateY(-46.2deg);}
-  50% {transform: translateX(-6.25vw) rotateY(-41.5deg);}
-  65% {transform: translateX(-4.375vw) rotateY(-34.5deg);}
-  75% {transform: translateX(-3.125vw) rotateY(-29deg);}
-  83% {transform: translateX(-2.125vw) rotateY(-23.8deg);}
-  90% {transform: translateX(-1.25vw) rotateY(-18.1deg);}
-  95% {transform: translateX(-0.625vwm) rotateY(-12.8deg);}
-  98% {transform: translateX(-0.25vw) rotateY(-8deg);}
-  99% {transform: translateX(-0.125vw) rotateY(-5deg);}
+  0% {
+    transform: translateX(-12.5vw) rotateY(-60deg);
+  }
+  20% {
+    transform: translateX(-10vw) rotateY(-53deg);
+  }
+  38% {
+    transform: translateX(-7.75vw) rotateY(-46.2deg);
+  }
+  50% {
+    transform: translateX(-6.25vw) rotateY(-41.5deg);
+  }
+  65% {
+    transform: translateX(-4.375vw) rotateY(-34.5deg);
+  }
+  75% {
+    transform: translateX(-3.125vw) rotateY(-29deg);
+  }
+  83% {
+    transform: translateX(-2.125vw) rotateY(-23.8deg);
+  }
+  90% {
+    transform: translateX(-1.25vw) rotateY(-18.1deg);
+  }
+  95% {
+    transform: translateX(-0.625vwm) rotateY(-12.8deg);
+  }
+  98% {
+    transform: translateX(-0.25vw) rotateY(-8deg);
+  }
+  99% {
+    transform: translateX(-0.125vw) rotateY(-5deg);
+  }
   100% {
     transform: translateX(0) rotateY(0);
     box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.1);
   }
 }
 @keyframes fadeOut {
-  from {opacity: 1;}
-  to {opacity: 0;}
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 @keyframes fadeIn {
-  to {opacity: 1;}
+  to {
+    opacity: 1;
+  }
 }
 @keyframes paperMapFadeIn {
-  0% {transform: scale(0, 0.5); opacity: 0;}
-  100% {transform: scale(1); opacity: 1;}
+  0% {
+    transform: scale(0, 0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .leaflet-popup {
-
   .leaflet-popup-close-button {
     display: none;
   }
@@ -192,9 +268,9 @@
     border: groove 1px #fff;
     overflow: hidden;
     top: 100%;
-    left: 50%; 
+    left: 50%;
     transform: translate(-50%, -100%);
-    -webkit-transform: translate(-50%, -100%); 
+    -webkit-transform: translate(-50%, -100%);
     position: absolute;
 
     animation: fadeInPopup 1s ease-out;
@@ -229,7 +305,7 @@
         height: 100%;
 
         .caption {
-          color: #F1F1F1;
+          color: #f1f1f1;
           height: 100%;
           white-space: nowrap;
         }
@@ -237,7 +313,7 @@
         hr {
           //height: 5px;
           //border-right: none;
-          border: groove 1.35px #FFF;
+          border: groove 1.35px #fff;
           box-shadow: 0 0 3px #000;
         }
 
@@ -245,7 +321,7 @@
           float: left;
           height: 120px;
           width: 120px;
-          fill: #F1F1F1;
+          fill: #f1f1f1;
         }
       }
     }
