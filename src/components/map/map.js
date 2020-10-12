@@ -13,12 +13,12 @@ class SmartMap extends React.Component {
   constructor(props) {
     super(props)
 
-
     const countries = []
-    for (const country of Object.keys(countries_by_name))
-      countries.push(country)
 
-    console.log(countries)
+    let i = 0
+    for (const country of Object.keys(countries_by_name))
+      countries.push({ 'key': i++, 'value': country })
+
     this.state = {
       remote_locator: null,
       countryLookup: false,
@@ -42,6 +42,8 @@ class SmartMap extends React.Component {
   }
 
   lookupCountryByName(countryName) {
+    if (!countryName)
+      return null
     const ucname = countryName.toUpperCase().trim();
     const foundCountry = countries_by_name[ucname]
 
@@ -201,14 +203,17 @@ class SmartMap extends React.Component {
     </div>
   }
 
-  closeCountryLookup(selectedIndex) {
-    console.log(selectedIndex)
-    this.setState({ countryLookup: false })
-    if (selectedIndex === null)
+  closeCountryLookup(selectedKey) {
+
+    selectedKey = Number(selectedKey)
+    this.setState({ countryLookup: false, remote_locator: null })
+    if (selectedKey === null)
       return
 
-    let country = this.state.countries[selectedIndex]
-    country = countries_by_name[country]
+    let country = this.state.countries.find(x => x.key === selectedKey)
+    if (!country)
+      return
+    country = countries_by_name[country.value]
     if (country) {
       let mh = new Maidenhead(...country.coords, 3)
       this.setState({ remote_locator: mh.locator })

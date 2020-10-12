@@ -14,7 +14,7 @@ class FilterablePanel extends React.Component {
     this.handleInput = this.handleInput.bind(this);
     this.filterCountries = this.doFilterOptions.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.notifyParent = this.clickHandler.bind(this);
+    this.clickHandler = this.clickHandler.bind(this);
 
   }
 
@@ -41,20 +41,9 @@ class FilterablePanel extends React.Component {
 
   doFilterOptions() {
     let cnt = 0
-    let filteredOptions = []
 
-    let i = 0
-    for (let option of this.props.options) {
-      let cf = this.state.filter ? this.state.filter.toUpperCase() : ""
-      if (cf === "" || option.toUpperCase().includes(cf)) {
-        filteredOptions.push({ value: option, key: i })
-        cnt++
-      }
-      if (cnt > this.props.maxcnt)
-        break
-
-      i++
-    }
+    const filter = this.state.filter ? this.state.filter.toUpperCase() : ""
+    let filteredOptions = this.props.options.filter((option) => (filter === "" || option.value.toUpperCase().includes(filter)) && cnt++ < this.props.maxcnt)
 
     this.setState({ filteredOptions: filteredOptions })
   }
@@ -67,21 +56,21 @@ class FilterablePanel extends React.Component {
       this.clickHandler(this.state.filteredOptions[this.state.selectedIndex].key)
 
     else {
-      let si = this.state.selectedIndex
+      let nextSelectedIndex = this.state.selectedIndex
       if (e.key === 'ArrowDown')
-        si++
+        nextSelectedIndex++
       else if (e.key === 'ArrowUp')
-        si--
+        nextSelectedIndex--
 
       const cmax = Math.min(this.state.filteredOptions.length, this.props.maxcnt)
 
-      if (si < 0) si = 0
-      else if (si >= cmax) {
-        si = cmax - 1
+      if (nextSelectedIndex < 0) nextSelectedIndex = 0
+      else if (nextSelectedIndex >= cmax) {
+        nextSelectedIndex = cmax - 1
       }
 
-      if (si !== this.state.selectedIndex)
-        this.setState({ selectedIndex: si })
+      if (nextSelectedIndex !== this.state.selectedIndex)
+        this.setState({ selectedIndex: nextSelectedIndex })
     }
   }
 
@@ -152,7 +141,7 @@ function PanelItems(props) {
 }
 
 FilterablePanel.defaultProps = {
-  maxcnt: 2000,
+  maxcnt: 8,
   modal: false
 }
 

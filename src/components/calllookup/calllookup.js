@@ -1,10 +1,11 @@
+import { ResourceStore } from 'i18next';
 import React from 'react'
 import { withTranslation } from 'react-i18next';
 
 const QRZCOM_XMLDATA_URL = 'https://xmldata.qrz.com/xml/current/'
 const axios = require('axios').default;
 const xml2js = require('xml2js')
-
+const LOCAL_STORE_KEY = 'CALL_LOOKUP_APIKEY'
 class CallLookup extends React.Component {
 
   constructor(props) {
@@ -15,7 +16,7 @@ class CallLookup extends React.Component {
     this.doLookup = this.doLookup.bind(this);
     this.qrzLookup = this.qrzLookup.bind(this);
 
-    let credentials = localStorage.getItem("CALL_LOOKUP_APIKEY")
+    let credentials = localStorage.getItem(LOCAL_STORE_KEY)
     if (credentials === null)
       credentials = { apikey: "", username: "", password: "" }
     else
@@ -35,17 +36,70 @@ class CallLookup extends React.Component {
     }
   }
 
-  doLogin() {
-    this.qrzLogin(this.state.input_username, this.state.input_password)
+  async doLogin() {
+    this.setState({ errormessage: "", button_login_loading: true })
+    try {
+      const res = await this.qrzLogin(this.state.input_username, this.state.input_password)
+      if (res.error)
+        throw Error(res.error)
+
+      let credentials = { apikey: res.apikey, username: this.state.input_username, password: this.state.input_password }
+      this.setState(credentials)
+      localStorage.setItem(LOCAL_STORE_KEY, JSON.stringify(credentials))
+    } catch (err) {
+      this.setState({ errormessage: err.message, apikey: "", username: "", password: "" })
+      localStorage.removeItem(LOCAL_STORE_KEY)
+    } finally {
+      this.setState({ button_login_loading: false })
+    }
   }
 
-  doLookup() {
-    this.qrzLookup(true)
+  async doLookup() {
+    if (this.props.onCountryChanged)
+      this.props.onCountryChanged(null)
+
+    this.setState({
+      'errormessage': "",
+      'lookup_results': { name: "", city: "", country: "" },
+      'button_lookup_loading': true
+    })
+
+    try {
+      let res = await this.qrzLookup(this.state.callsign, this.state.apikey)
+      if (res.error) {
+        if (res.error === "INVALID_KEY") {
+          res = await this.qrzLogin(this.state.username, this.state.password)
+          if (res.error) {
+            this.setState({ apikey: "", username: "", password: "" })
+            localStorage.removeItem(LOCAL_STORE_KEY)
+            throw Error(res.error)
+          }
+
+          const apikey = res.apikey
+          this.setState({ apikey: apikey })
+          let credentials = { apikey: res.apikey, username: this.state.username, password: this.state.password }
+          localStorage.setItem(LOCAL_STORE_KEY, JSON.stringify(credentials))
+          res = await this.qrzLookup(this.state.callsign, apikey)
+          if (res.error)
+            throw Error(res.error)
+        } else {
+          throw Error(res.error)
+        }
+      }
+
+      this.setState({ 'lookup_results': res })
+
+      if (this.props.onCountryChanged)
+        this.props.onCountryChanged(res.country || null)
+    } catch (err) {
+      this.setState({ errormessage: err.message })
+    } finally {
+      this.setState({ button_lookup_loading: false })
+    }
   }
 
   async qrzLogin(username, password) {
 
-    this.setState({ errormessage: "", button_login_loading: true })
     try {
       let res = await axios.get(QRZCOM_XMLDATA_URL,
         { params: { username: username, password: password } })
@@ -53,78 +107,61 @@ class CallLookup extends React.Component {
       if (res.status === 200) {
         let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
 
-        if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error)
+        this.qrzValidateResponse(jsonResponse)
+
+        if (jsonResponse.QRZDatabase.Session.Error)
           throw Error(jsonResponse.QRZDatabase.Session.Error)
 
-        if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Key) {
-          let apikey = {
-            apikey: jsonResponse.QRZDatabase.Session.Key,
-            username: username,
-            password: password
-          }
-          setTimeout(() => {
-            localStorage.setItem('CALL_LOOKUP_APIKEY', JSON.stringify(apikey))
-            this.setState(apikey)
-          }, 0);
-
+        if (jsonResponse.QRZDatabase.Session.Key) {
+          return { apikey: jsonResponse.QRZDatabase.Session.Key }
         } else {
           throw Error("Could not find API Key")
         }
       } else {
         throw Error(res.error) || Error("Unknown error")
       }
-
     } catch (error) {
-      console.error(error)
-      this.setState({ errormessage: error.message, apikey: "" })
+      return { error: error.message }
     }
-    this.setState({ button_login_loading: false })
-
   }
 
-  async qrzLookup(autorelogin) {
-    this.setState({
-      errormessage: "",
-      lookup_results: { name: "", city: "", country: "" },
-      button_lookup_loading: true
-    })
+  qrzValidateResponse(qrzResponse) {
+    if (!qrzResponse.QRZDatabase)
+      throw Error("QRZDatabase property not found")
+
+    if (!qrzResponse.QRZDatabase.Session)
+      throw Error("QRZDatabase.Session property not found")
+  }
+
+  async qrzLookup(callsign, apikey) {
+    let httpres = await axios.get(QRZCOM_XMLDATA_URL, { params: { s: apikey, callsign: callsign } })
 
     try {
-      let res = await axios.get(QRZCOM_XMLDATA_URL,
-        { params: { s: this.state.apikey, callsign: this.state.callsign } })
+      if (httpres.status === 200) {
+        let res = await xml2js.parseStringPromise(httpres.data, { explicitArray: false, ignoreAttrs: true })
 
-      if (res.status === 200) {
-        let jsonResponse = await xml2js.parseStringPromise(res.data, { explicitArray: false, ignoreAttrs: true })
+        this.qrzValidateResponse(res)
 
-        if (jsonResponse.QRZDatabase && jsonResponse.QRZDatabase.Session && jsonResponse.QRZDatabase.Session.Error) {
-          if ((jsonResponse.QRZDatabase.Session.Error === "Session Timeout" || jsonResponse.QRZDatabase.Session.Error === "Invalid session key") && autorelogin) {
-            await this.qrzLogin(this.state.username, this.state.password)
-            setTimeout(() => {
-              this.qrzLookup(false)
-            }, 0);
+        if (res.QRZDatabase.Session.Error) {
+          if (["Session Timeout", "Invalid session key"].includes(res.QRZDatabase.Session.Error)) {
+            throw Error("INVALID_KEY")
           } else {
-            throw Error(jsonResponse.QRZDatabase.Session.Error)
+            throw Error(res.QRZDatabase.Session.Error)
           }
         } else {
-          this.setState({
-            lookup_results: {
-              name: (jsonResponse.QRZDatabase.Callsign.fname || "") + " " + (jsonResponse.QRZDatabase.Callsign.name || ""),
-              city: (jsonResponse.QRZDatabase.Callsign.addr2 || "") + ", " + (jsonResponse.QRZDatabase.Callsign.state || ""),
-              country: jsonResponse.QRZDatabase.Callsign.country || ""
-            }
-          })
-          if (this.props.onCountryChanged)
-            this.props.onCountryChanged(jsonResponse.QRZDatabase.Callsign.country || null)
+          const lookup_results = {
+            name: (res.QRZDatabase.Callsign.fname || "") + " " + (res.QRZDatabase.Callsign.name || ""),
+            city: (res.QRZDatabase.Callsign.addr2 || "") + ", " + (res.QRZDatabase.Callsign.state || ""),
+            country: res.QRZDatabase.Callsign.country || ""
+          }
+          return lookup_results;
         }
       } else {
-        throw Error(res.error) || Error("error")
+        throw Error(httpres.error) || Error("error")
       }
-
-    } catch (error) {
-      console.error(error)
-      this.setState({ errormessage: error.message })
+    } catch (err) {
+      return { error: err.message }
     }
-    this.setState({ button_lookup_loading: false })
   }
 
 
