@@ -15,6 +15,11 @@ function WWV(props) {
         <div className="card-header-title">
           {t('WWV.MAIN_TITLE')}
         </div>
+        <div className="card-header-icon">
+          <span className="icon ">
+            <i className="fas fa-sun"></i>
+          </span>
+        </div>
       </div>
 
       <div className="card-content">
@@ -26,7 +31,7 @@ function WWV(props) {
           ]
         } />
         <p className="is-italic is-pulled-right" title={upd.format('lll')} >{t('WWV.UPDATED')} {upd.fromNow()}</p>
-        <hr className="is-invisible"/>
+        <hr className="is-invisible" />
       </div>
     </div>
   }

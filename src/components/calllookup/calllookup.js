@@ -206,17 +206,22 @@ class CallLookup extends React.Component {
         <div className="card-header-title">
           {this.props.t('CLOOKUP.TITLE')}
         </div>
+        <div className="card-header-icon">
+          <span className="icon ">
+            <i className="fas fa-id-card"></i>
+          </span>
+        </div>
       </div>
       <div className="card-content">
         <div className="content">
           <div className="field has-addons has-addons-fullwidth is-fullwidth">
-            <div className="control is-fullwidth">
-              <input type="text" name="callsign" className="input is-fullwidth"
+            <div className="control is-fullwidth is-small ">
+              <input type="text" name="callsign" className=" is-small  input is-fullwidth"
                 value={this.state.callsign} onChange={this.handleInput}
                 placeholder={this.props.t('CLOOKUP.CALLSIGN_PLACEHOLDER')}></input>
             </div>
             <div className="control">
-              <button className={"button is-primary is-fullwidth " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
+              <button className={"button is-small is-primary is-fullwidth " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
             </div>
           </div>
         </div>

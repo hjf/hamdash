@@ -112,6 +112,11 @@ class SmartMap extends React.Component {
         <div className="card-header-title">
           {this.props.t('MAP.MAP_TITLE')}
         </div>
+        <div className="card-header-icon">
+          <span className="icon ">
+            <i className="fas fa-globe"></i>
+          </span>
+        </div>
       </div>
 
       <div className="card-content">

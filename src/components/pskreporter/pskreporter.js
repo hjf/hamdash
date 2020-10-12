@@ -12,7 +12,7 @@ class PSKReporter extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { error: null, monitors: null, spots: null }
+    this.state = { error: null, monitors: null, spottedMe: null, spottedByMe:null }
   }
 
   componentDidMount() {
@@ -34,6 +34,12 @@ class PSKReporter extends React.Component {
       <div className="card-header">
         <div className="card-header-title">
           {this.props.t('PSKREPORTER.TITLE')}
+          
+        </div>
+        <div className="card-header-icon">
+          <span className="icon ">
+            <i className="fas fa-binoculars"></i>
+          </span>
         </div>
       </div>
 
@@ -41,11 +47,14 @@ class PSKReporter extends React.Component {
         <Level data={
           [
             { title: this.props.t('PSKREPORTER.MONITORS'), value: this.state.monitors },
-            { title: this.props.t('PSKREPORTER.SPOTS'), value: this.state.spots },
+            { title: this.props.t('PSKREPORTER.SPOTTED_ME'), value: this.state.spottedMe },
+            { title: this.props.t('PSKREPORTER.SPOTTED_BY_ME'), value: this.state.spottedByMe },
           ]
         }></Level>
-        <span className="is-pulled-right is-italic">{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></span>
-      </div>
+        <p className="is-pulled-right is-italic">{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></p>
+        <hr className="is-invisible "/>
+
+      </div >
     </div >
 
   }
@@ -70,7 +79,8 @@ class PSKReporter extends React.Component {
           this.setState(
             {
               monitors: res.data.data.monitors,
-              spots: res.data.data.spots
+              spottedMe: res.data.data.spottedMe,
+              spottedByMe: res.data.data.spottedByMe,
             }
           )
         }
