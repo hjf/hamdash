@@ -1,10 +1,19 @@
 import React from 'react';
-import { LevelItem } from './levelitem'
 
 function Level(props) {
   return <nav className="level">
-    {props.data.map((x) => { console.log(x); return <LevelItem title={x.title} value={x.value} key={x.title}   ></LevelItem> })}
+    {props.data.map((x) => {
+      return <LevelItem title={x.title} value={x.value} key={x.title} />
+    })}
   </nav>
 }
 
-export { Level};
+function LevelItem(props) {
+  return <div class="level-item has-text-centered">
+    <div>
+      <p class="heading">{props.title}</p>
+      <p class="title">{props.value}</p>
+    </div>
+  </div>
+}
+export { Level, LevelItem };

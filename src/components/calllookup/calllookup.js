@@ -38,7 +38,7 @@ class CallLookup extends React.Component {
   doLogin() {
     this.qrzLogin(this.state.input_username, this.state.input_password)
   }
-  
+
   doLookup() {
     this.qrzLookup(true)
   }
@@ -83,9 +83,11 @@ class CallLookup extends React.Component {
   }
 
   async qrzLookup(autorelogin) {
-    this.setState({ errormessage: "" })
-    this.setState({ lookup_results: { name: "", city: "", country: "" } })
-    this.setState({ button_lookup_loading: true })
+    this.setState({
+      errormessage: "",
+      lookup_results: { name: "", city: "", country: "" },
+      button_lookup_loading: true
+    })
 
     try {
       let res = await axios.get(QRZCOM_XMLDATA_URL,
