@@ -1,5 +1,5 @@
 var https = require('https');
-
+var fs = require('fs')
 var cache = {}
 
 exports.handler = async (event) => {
@@ -16,11 +16,11 @@ exports.handler = async (event) => {
   let rv = { error: null, data: null }
 
   try {
-    if (event.queryStringParameters.devMode) {
-      rv = { "statusCode": 200, "body": { "error": null, "data": { "monitors": 4904, "spots": 546, "monitors_per_mode": { "FT8": 4376, "JS8": 164, "CW": 21, "FT4": 222, "PSK31": 23, "JT65": 9, "OPERA": 22, "MSK144": 20, "WSPR": 3, "FST4W": 21, "ROS": 7, "FST4": 3, "JT9": 2, "JT6M": 3, "PI4": 2, "RTTY": 2, "CW (KY C": 1, "MFSK32": 1, "OLIVIA-8": 1, "CONTESTI": 1 }, "spots_per_band": { "10.1": 391, "5.4": 152 } } } }
-      response.body = JSON.stringify(rv)
-      return response
-    }
+    // if (event.queryStringParameters.devMode) {
+    //   rv = { "statusCode": 200, "body": { "error": null, "data": { "monitors": 4904, "spots": 546, "monitors_per_mode": { "FT8": 4376, "JS8": 164, "CW": 21, "FT4": 222, "PSK31": 23, "JT65": 9, "OPERA": 22, "MSK144": 20, "WSPR": 3, "FST4W": 21, "ROS": 7, "FST4": 3, "JT9": 2, "JT6M": 3, "PI4": 2, "RTTY": 2, "CW (KY C": 1, "MFSK32": 1, "OLIVIA-8": 1, "CONTESTI": 1 }, "spots_per_band": { "10.1": 391, "5.4": 152 } } } }
+    //   response.body = JSON.stringify(rv)
+    //   return response
+    // }
     let cached = cache[callsign]
     if (cached) {
       if (cached.expires > new Date()) {
@@ -28,14 +28,19 @@ exports.handler = async (event) => {
         return response
       }
     }
-    let results = await worker(callsign)
+    let results = null
+    if (event.queryStringParameters.devMode)
+      results = JSON.parse(fs.readFileSync('pskquery5.json'))
+
+    else
+      results = await worker(callsign)
+
     rv.data = {
       monitors: results.activeReceiver.length,
-      spots: results.receptionReport.length,
       monitors_per_mode: {},
       spots_per_band: {}
-
     }
+
     for (let mon of results.activeReceiver) {
       if (!mon.mode)
         continue;
@@ -55,19 +60,27 @@ exports.handler = async (event) => {
       rv.data.spots_per_band[f]++
     }
 
-    console.log(rv.data)
+    rv.data.spottedMe = results.receptionReport.filter(x => x.isSender === 1).length
+    rv.data.spottedByMe = results.receptionReport.filter(x => x.isReceiver === 1).length
+
+
   } catch (err) {
     rv.error = JSON.stringify(err)
   }
 
+  const expiry = Date.now() + 1000 * 60 * 10 // 600.000ms = 10min
+
+  if (!rv.error)
+    response.headers = {
+      "Cache-Control": "max-age: 600",
+      "Expires": (new Date(expiry)).toUTCString()
+    }
   response.body = JSON.stringify(rv)
 
   cache[callsign] = {
-    expires: new Date(Date.now() + 1000 * 60 * 6),
+    expires: new Date(expiry),
     payload: response.body
   }
-
-
 
   return response
 };
@@ -78,7 +91,7 @@ function worker(callsign) {
 
     let options = {
       host: 'pskreporter.info',
-      path: `/cgi-bin/pskquery5.pl?callback=""&flowStartSeconds=-900&callsign=${callsign}`
+      path: `/cgi-bin/pskquery5.pl?callback=""&flowStartSeconds=-86400&callsign=${callsign}`
     };
 
     https.request(options, (res) => {
