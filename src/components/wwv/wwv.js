@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
+import { Level } from '../levels/level'
 import dayjs from '../../time'
 
 function WWV(props) {
@@ -17,10 +18,15 @@ function WWV(props) {
       </div>
 
       <div className="card-content">
-        <p><i>{t('WWV.SFI')}</i> {props.wwv_data.data.sfi}</p>
-        <p><i>{t('WWV.PLANETARY_A_INDEX')}</i> {props.wwv_data.data.a_index}</p>
-        <p><i>{t('WWV.PLANETARY_K_INDEX')}</i> {props.wwv_data.data.k_index}</p>
-        <p title={upd.format('lll')} ><i>{t('WWV.UPDATED')}</i> {upd.fromNow()}</p>
+        <Level data={
+          [
+            { "title": t('WWV.SFI'), "value": props.wwv_data.data.sfi },
+            { "title": t('WWV.PLANETARY_A_INDEX'), "value": props.wwv_data.data.a_index },
+            { "title": t('WWV.PLANETARY_K_INDEX'), "value": props.wwv_data.data.k_index },
+          ]
+        } />
+        <p className="is-italic is-pulled-right" title={upd.format('lll')} >{t('WWV.UPDATED')} {upd.fromNow()}</p>
+        <hr className="is-invisible"/>
       </div>
     </div>
   }
