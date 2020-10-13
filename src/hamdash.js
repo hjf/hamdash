@@ -17,6 +17,7 @@ import SmartMap from './components/map/map'
 import WWV from './components/wwv/wwv'
 import WWV_fetcher from './components/wwv/fetch'
 import PSKReporter from './components/pskreporter/pskreporter'
+import RSS from './components/rss/rss'
 const fetchers = []
 fetchers.push(WWV_fetcher)
 
@@ -89,11 +90,14 @@ class HamDash extends React.Component {
                 <div className="tile is-child">
                   <PSKReporter callsign={this.state.station_info.callsign} />
                 </div>
+                <div className="tile is-child">
+                  <RSS />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="tile is-vertical is-4">
+          <div className="tile is-vertical ">
             <div className="tile">
               <div className="tile is-parent is-vertical">
                 <div className="tile is-child ">

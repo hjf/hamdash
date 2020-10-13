@@ -52,8 +52,8 @@ class FilterablePanel extends React.Component {
     if (e.key === "Escape")
       this.clickHandler(null)
 
-    else if (e.key === "Enter")
-      this.clickHandler(this.state.filteredOptions[this.state.selectedIndex].key)
+    else if (e.key === "Enter" && this.props.parentHandler)
+      this.props.parentHandler(this.state.filteredOptions[this.state.selectedIndex].key)
 
     else {
       let nextSelectedIndex = this.state.selectedIndex
@@ -64,10 +64,7 @@ class FilterablePanel extends React.Component {
 
       const cmax = Math.min(this.state.filteredOptions.length, this.props.maxcnt)
 
-      if (nextSelectedIndex < 0) nextSelectedIndex = 0
-      else if (nextSelectedIndex >= cmax) {
-        nextSelectedIndex = cmax - 1
-      }
+      nextSelectedIndex = Math.clamp(nextSelectedIndex, 0, cmax);
 
       if (nextSelectedIndex !== this.state.selectedIndex)
         this.setState({ selectedIndex: nextSelectedIndex })
@@ -141,7 +138,7 @@ function PanelItems(props) {
 }
 
 FilterablePanel.defaultProps = {
-  maxcnt: 8,
+  maxcnt: 1000,
   modal: false
 }
 
