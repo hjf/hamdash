@@ -1,6 +1,7 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next';
 import dayjs from '../../time';
+import { MyCard } from '../mycard'
 
 const timesync = require('timesync')
 
@@ -46,25 +47,14 @@ class NTPTime extends React.Component {
 
   render() {
 
-    return <div className="card">
-      <div className="card-header">
-        <div className="card-header-title">
-          {this.props.t('NTPTIME.TITLE')}
-        </div>
-        <div className="card-header-icon">
-          <span className="icon ">
-            <i className="fas fa-clock"></i>
-          </span>
-        </div>
-      </div>
-      <div className="card-content ">
-        <div className="content ">
-      <p className="title has-text-centered">{this.state.servertime}</p>
-          </div>
-        <div className="content has-text-centered">{this.props.t('NTPTIME.LABEL_LOCAL_TIME')}: {this.state.localtime}</div>
-        <div className="content has-text-centered">{this.props.t('NTPTIME.LABEL_TIME_ERROR', { offset: this.state.offset })}</div>
-      </div>
-    </div>
+    return <MyCard title={this.props.t('NTPTIME.TITLE')} icon="clock">
+
+      <p className=" title has-text-centered">{this.state.servertime}</p>
+      <p className=" has-text-centered">{this.props.t('NTPTIME.LABEL_LOCAL_TIME')}: {this.state.localtime}</p>
+      <p className=" has-text-centered">{this.props.t('NTPTIME.LABEL_TIME_ERROR', { offset: this.state.offset })}</p>
+
+    </MyCard>
+
 
   }
 

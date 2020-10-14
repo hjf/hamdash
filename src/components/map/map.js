@@ -4,6 +4,7 @@ import { Map, Marker, TileLayer } from 'react-leaflet'
 import { GeodesicLine } from 'react-leaflet-geodesic'
 import Maidenhead from 'maidenhead'
 import FilterablePanel from '../filterablepanel/filterablepanel'
+import { MyCard } from '../mycard'
 
 //const countries_by_code = require("./countries_by_code.json")
 const countries_by_name = require("./countries_by_name.json")
@@ -107,18 +108,7 @@ class SmartMap extends React.Component {
       }
     }
 
-    return <div className="card">
-      <div className="card-header">
-        <div className="card-header-title">
-          {this.props.t('MAP.MAP_TITLE')}
-        </div>
-        <div className="card-header-icon">
-          <span className="icon ">
-            <i className="fas fa-globe"></i>
-          </span>
-        </div>
-      </div>
-
+    return <MyCard title={this.props.t('MAP.MAP_TITLE')} icon="globe">
       <div className="card-content">
         <div className="content">
           <Map ref='map' center={home_marker} zoom={1} className="leaflet-container">
@@ -223,7 +213,9 @@ class SmartMap extends React.Component {
             modal={true} />
         </div>
       }
-    </div >
+    </MyCard>
+
+
   }
 
   closeCountryLookup(selectedKey) {

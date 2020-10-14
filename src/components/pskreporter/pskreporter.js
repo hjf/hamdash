@@ -1,6 +1,7 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next';
 import { Level } from '../levels/level'
+import { MyCard } from '../mycard'
 
 const axios = require('axios').default;
 const DATA_URL_BASE = 'https://170r8c5e4f.execute-api.sa-east-1.amazonaws.com/default/getSpots'
@@ -12,7 +13,7 @@ class PSKReporter extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { error: null, monitors: null, spottedMe: null, spottedByMe:null }
+    this.state = { error: null, monitors: null, spottedMe: null, spottedByMe: null }
   }
 
   componentDidMount() {
@@ -30,32 +31,19 @@ class PSKReporter extends React.Component {
 
   render() {
 
-    return <div className="card">
-      <div className="card-header">
-        <div className="card-header-title">
-          {this.props.t('PSKREPORTER.TITLE')}
-          
-        </div>
-        <div className="card-header-icon">
-          <span className="icon ">
-            <i className="fas fa-binoculars"></i>
-          </span>
-        </div>
-      </div>
+    return <MyCard title={this.props.t('PSKREPORTER.TITLE')} icon="binoculars">
 
-      <div className="card-content">
-        <Level data={
-          [
-            { title: this.props.t('PSKREPORTER.MONITORS'), value: this.state.monitors },
-            { title: this.props.t('PSKREPORTER.SPOTTED_ME'), value: this.state.spottedMe },
-            { title: this.props.t('PSKREPORTER.SPOTTED_BY_ME'), value: this.state.spottedByMe },
-          ]
-        }></Level>
-        <p className="is-pulled-right is-italic">{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></p>
-        <hr className="is-invisible "/>
+      <Level data={
+        [
+          { title: this.props.t('PSKREPORTER.MONITORS'), value: this.state.monitors },
+          { title: this.props.t('PSKREPORTER.SPOTTED_ME'), value: this.state.spottedMe },
+          { title: this.props.t('PSKREPORTER.SPOTTED_BY_ME'), value: this.state.spottedByMe },
+        ]
+      }></Level>
+      <p className="is-pulled-right is-italic">{this.props.t('PSKREPORTER.LINK')} <a href={"https://pskreporter.info/pskmap?callsign=" + this.props.callsign}>PSKReporter.com</a></p>
+      <hr className="is-invisible " />
 
-      </div >
-    </div >
+    </MyCard>
 
   }
 

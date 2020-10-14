@@ -1,6 +1,8 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import dayjs from '../../time'
+import { MyCard } from '../mycard'
+
 
 let Parser = require('rss-parser');
 
@@ -27,25 +29,11 @@ class RSS extends React.Component {
   }
 
   render() {
-
-    return <div className="card">
-      <div className="card-header">
-        <div className="card-header-title">
-          {this.state.title}
-        </div>
-        <div className="card-header-icon">
-          <span className="icon ">
-            <i className="fas fa-newspaper"></i>
-          </span>
-        </div>
-      </div>
-      <div className="card-content ">
-        {this.state.news && this.state.news.map((x) => {
-          return <NewsItem title={x.title} snippet={x.contentSnippet} key={x.guid} date={x.isoDate} link={x.link}/>
-        })}
-      </div>
-    </div>
-
+    return <MyCard title={this.state.title} icon="newspaper">
+      {this.state.news && this.state.news.map((x) => {
+        return <NewsItem title={x.title} snippet={x.contentSnippet} key={x.guid} date={x.isoDate} link={x.link} />
+      })}
+    </MyCard>
   }
 
   async refresh() {
@@ -71,7 +59,7 @@ function NewsItem(props) {
   return <article className="media">
     <figure className="media-left">
       <p className="image is-64x64">
-        <img src="https://bulma.io/images/placeholders/128x128.png" />
+        <img src="/img/logo_arrl.png" />
       </p>
     </figure>
     <div className="media-content">
@@ -82,7 +70,7 @@ function NewsItem(props) {
           {props.snippet}
         </p>
       </div>
-      <nav className="level is-mobile">
+      {/* <nav className="level is-mobile">
         <div className="level-left">
           <a className="level-item">
             <span className="icon is-small"><i className="fas fa-reply"></i></span>
@@ -94,10 +82,10 @@ function NewsItem(props) {
             <span className="icon is-small"><i className="fas fa-heart"></i></span>
           </a>
         </div>
-      </nav>
+      </nav> */}
     </div>
     <div className="media-right">
-      <button className="delete"></button>
+      {/* <button className="delete"></button> */}
     </div>
   </article>
 }

@@ -64,57 +64,53 @@ class HamDash extends React.Component {
                 <Weather home={this.state.station_info.locator} />
               </b>
             </p>
-
             <p className="navbar-item">
               {this.state.station_info.callsign}
             </p>
-            <button className="button is-primary navbar-item" onClick={this.doLogout} >
-              <FontAwesomeIcon icon={faSignOutAlt} />
-            </button>
+            <p className="navbar-item">
+              <button className="button is-primary navbar-item" onClick={this.doLogout} >
+                <FontAwesomeIcon icon={faSignOutAlt} />
+              </button>
+            </p>
+
           </div>
         </div>
       </nav>
 
-      <section className="section">
-        <div className="tile is-ancestor">
-          <div className="tile is-vertical ">
-            <div className="tile">
-              <div className="tile is-parent is-vertical">
-                <div className="tile is-child">
-                  <SmartMap
-                    home={this.state.station_info.locator}
-                    remote_locator_by_country_name={this.state.country_by_name}
-                  >
-                  </SmartMap>
-                </div>
-                <div className="tile is-child">
-                  <PSKReporter callsign={this.state.station_info.callsign} />
-                </div>
-                <div className="tile is-child">
-                  <RSS />
-                </div>
-              </div>
-            </div>
+
+      <div class="columns">
+        <div class="column pl-5 pt-5">
+          <div class="block">
+            <SmartMap
+              home={this.state.station_info.locator}
+              remote_locator_by_country_name={this.state.country_by_name}
+            >
+            </SmartMap>
           </div>
 
-          <div className="tile is-vertical ">
-            <div className="tile">
-              <div className="tile is-parent is-vertical">
-                <div className="tile is-child ">
-                  <NTPTime ></NTPTime>
-                </div>
-                <div className="tile is-child ">
-                  <WWV wwv_data={this.state.wwv_data}></WWV>
-                </div>
-                <div className="tile is-child ">
-                  <CallLookup onCountryChanged={this.countryByNameCallback}></CallLookup>
-                </div>
-              </div>
-            </div>
+          <div class="block">
+            <PSKReporter callsign={this.state.station_info.callsign} />
+          </div>
+          <div class="block">
+            <RSS />
+          </div>
+
+        </div>
+        <div class="column is-narrow pr-5 pt-5">
+          <div class="block">
+            <NTPTime ></NTPTime>
+          </div>
+          <div class="block"> <WWV wwv_data={this.state.wwv_data}></WWV>
+          </div>
+          <div class="block">  <CallLookup onCountryChanged={this.countryByNameCallback}></CallLookup>
           </div>
         </div>
-      </section >
-    </div >;
+
+      </div>
+    </div>
+
+
+
   }
 
   async refreshComponents() {

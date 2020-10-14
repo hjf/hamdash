@@ -1,6 +1,7 @@
 import { ResourceStore } from 'i18next';
 import React from 'react'
 import { withTranslation } from 'react-i18next';
+import { MyCard } from '../mycard'
 
 const QRZCOM_XMLDATA_URL = 'https://xmldata.qrz.com/xml/current/'
 const axios = require('axios').default;
@@ -167,8 +168,7 @@ class CallLookup extends React.Component {
 
   render() {
     if (this.state.apikey === "") {
-      return <div className="box">
-        <h1 className="title">{this.props.t('CLOOKUP.TITLE')}</h1>
+      return <MyCard title={this.props.t('CLOOKUP.TITLE')} icon="id-card">
         <p>{this.props.t('CLOOKUP.EXPLAIN')}<a href="https://qrz.com/">QRZ.com</a>.</p>
         <form action="#">
           <div className="field">
@@ -199,50 +199,42 @@ class CallLookup extends React.Component {
           </div>
           <p className="error">{this.state.errormessage}</p>
         </form>
-      </div>
+      </MyCard>
     }
-    return <div className="card">
-      <div className="card-header">
-        <div className="card-header-title">
-          {this.props.t('CLOOKUP.TITLE')}
-        </div>
-        <div className="card-header-icon">
-          <span className="icon ">
-            <i className="fas fa-id-card"></i>
-          </span>
-        </div>
-      </div>
-      <div className="card-content">
-        <div className="content">
-          <div className="field has-addons has-addons-fullwidth is-fullwidth">
-            <div className="control is-fullwidth is-small ">
-              <input type="text" name="callsign" className=" is-small  input is-fullwidth"
-                value={this.state.callsign} onChange={this.handleInput}
-                placeholder={this.props.t('CLOOKUP.CALLSIGN_PLACEHOLDER')}></input>
-            </div>
-            <div className="control">
-              <button className={"button is-small is-primary is-fullwidth " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
-            </div>
+
+    return <MyCard title={this.props.t('CLOOKUP.TITLE')} icon="id-card">
+      <div className="content">
+        <div className="field has-addons has-addons-fullwidth is-fullwidth">
+          <div className="control is-fullwidth is-small ">
+            <input type="text" name="callsign" className=" is-small  input is-fullwidth"
+              value={this.state.callsign} onChange={this.handleInput}
+              placeholder={this.props.t('CLOOKUP.CALLSIGN_PLACEHOLDER')}></input>
+          </div>
+          <div className="control">
+            <button className={"button is-small is-primary is-fullwidth " + (this.state.button_lookup_loading ? "is-loading" : "")} type="button" onClick={this.doLookup} name="doLookup">{this.props.t('CLOOKUP.LOOKUP')}</button>
           </div>
         </div>
-        <table className="table is-fullwidth is-fullwidth">
-          <tbody>
-            <tr >
-              <th>Name</th><td>{this.state.lookup_results.name}</td>
-            </tr>
-            <tr>
-              <th>City</th><td>{this.state.lookup_results.city}</td>
-            </tr>
-            <tr>
-              <th>Country</th><td>{this.state.lookup_results.country}</td>
-            </tr>
-            <tr>
-              <td colSpan="2">{this.state.errormessage} </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
-    </div>
+      <table className="table is-fullwidth is-fullwidth">
+        <tbody>
+          <tr >
+            <th>Name</th><td>{this.state.lookup_results.name}</td>
+          </tr>
+          <tr>
+            <th>City</th><td>{this.state.lookup_results.city}</td>
+          </tr>
+          <tr>
+            <th>Country</th><td>{this.state.lookup_results.country}</td>
+          </tr>
+          <tr>
+            <td colSpan="2">{this.state.errormessage} </td>
+          </tr>
+        </tbody>
+      </table>
+    </MyCard>
+
+
+
   }
 
   handleInput(e) {
